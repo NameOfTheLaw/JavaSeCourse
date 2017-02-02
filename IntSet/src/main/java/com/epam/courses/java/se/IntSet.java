@@ -7,13 +7,13 @@ package com.epam.courses.java.se;
  */
 public class IntSet {
 
-    private Long[] data;
+    private long[] data;
 
     public IntSet() {
-        this(new Long[] {new Long(0)});
+        this(new long[1]);
     }
 
-    private IntSet(Long[] data) {
+    private IntSet(long[] data) {
         this.data = data;
     }
 
@@ -73,7 +73,7 @@ public class IntSet {
      * @return
      */
     public IntSet union(IntSet other) {
-        Long[] biggerArray, smallerArray;
+        long[] biggerArray, smallerArray;
         if (this.data.length > other.data.length) {
             biggerArray = this.data;
             smallerArray = other.data;
@@ -81,7 +81,7 @@ public class IntSet {
             biggerArray = other.data;
             smallerArray = this.data;
         }
-        Long[] result = new Long[biggerArray.length];
+        long[] result = new long[biggerArray.length];
         for (int i = 0; i < smallerArray.length; i++) {
             result[i] = biggerArray[i] | smallerArray[i];
         }
@@ -98,7 +98,7 @@ public class IntSet {
      * @return
      */
     public IntSet intersection(IntSet other) {
-        Long[] biggerArray, smallerArray;
+        long[] biggerArray, smallerArray;
         if (this.data.length > other.data.length) {
             biggerArray = this.data;
             smallerArray = other.data;
@@ -106,14 +106,9 @@ public class IntSet {
             biggerArray = other.data;
             smallerArray = this.data;
         }
-        Long[] result = new Long[biggerArray.length];
+        long[] result = new long[biggerArray.length];
         for (int i = 0; i < smallerArray.length; i++) {
             result[i] = biggerArray[i] & smallerArray[i];
-        }
-        if (biggerArray.length != smallerArray.length) {
-            for (int i = smallerArray.length; i < biggerArray.length; i++) {
-                result[i] = new Long(0);
-            }
         }
         return new IntSet(result);
     }
@@ -126,7 +121,7 @@ public class IntSet {
      * @return
      */
     public IntSet difference(IntSet other) {
-        Long[] biggerArray, smallerArray;
+        long[] biggerArray, smallerArray;
         if (this.data.length > other.data.length) {
             biggerArray = this.data;
             smallerArray = other.data;
@@ -134,7 +129,7 @@ public class IntSet {
             biggerArray = other.data;
             smallerArray = this.data;
         }
-        Long[] result = new Long[biggerArray.length];
+        long[] result = new long[biggerArray.length];
         for (int i = 0; i < smallerArray.length; i++) {
             result[i] = biggerArray[i] ^ smallerArray[i];
         }
@@ -152,7 +147,7 @@ public class IntSet {
      * @return
      */
     public IntSet minus(IntSet other) {
-        Long[] biggerArray, smallerArray;
+        long[] biggerArray, smallerArray;
         if (this.data.length > other.data.length) {
             biggerArray = this.data;
             smallerArray = other.data;
@@ -160,18 +155,12 @@ public class IntSet {
             biggerArray = other.data;
             smallerArray = this.data;
         }
-        Long[] result = new Long[biggerArray.length];
+        long[] result = new long[biggerArray.length];
         for (int i = 0; i < smallerArray.length; i++) {
             result[i] = this.data[i] & (~(other.data[i]));
         }
-        if (biggerArray.length != smallerArray.length) {
-            if (biggerArray == this.data) {
-                System.arraycopy(biggerArray, smallerArray.length, result, smallerArray.length, biggerArray.length - smallerArray.length);
-            } else {
-                for (int i = smallerArray.length; i < biggerArray.length; i++) {
-                    result[i] = new Long(0);
-                }
-            }
+        if (biggerArray.length != smallerArray.length && biggerArray == this.data) {
+            System.arraycopy(biggerArray, smallerArray.length, result, smallerArray.length, biggerArray.length - smallerArray.length);
         }
         return new IntSet(result);
     }
@@ -184,7 +173,7 @@ public class IntSet {
      */
     public boolean isSubsetOf(IntSet other) {
         for (int i = 0; i < this.data.length && i < other.data.length; i++) {
-            if (!this.data[i].equals(this.data[i] & other.data[i])) {
+            if (!(this.data[i] == (this.data[i] & other.data[i]))) {
                 return false;
             }
         }
@@ -192,7 +181,7 @@ public class IntSet {
             return true;
         }
         for (int i = other.data.length; i < this.data.length; i++) {
-            if (!(this.data[i].equals(0))) {
+            if (!(this.data[i] == 0)) {
                 return false;
             }
         }
@@ -200,11 +189,8 @@ public class IntSet {
     }
 
     private void resizeArray(int valueOrder) {
-        Long[] newData = new Long[valueOrder + 1];
+        long[] newData = new long[valueOrder + 1];
         System.arraycopy(data, 0, newData, 0, data.length);
-        for (int i = data.length; i < newData.length; i++) {
-            newData[i] = new Long(0);
-        }
         data = newData;
     }
 
