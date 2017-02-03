@@ -1,7 +1,7 @@
 package com.epam.courses.java.se;
 
 /**
- * Class represents standart behavior for sets. Works for int values only.
+ * Class represents standard behavior for sets.
  *
  * Created by andrey on 02.02.2017.
  */
@@ -115,8 +115,8 @@ public class IntSet {
 
     /**
      * Return difference between the current set and the given.
-     * Works like XOR operation.
      *
+     * Works like XOR operation.
      * @param other
      * @return
      */
@@ -141,8 +141,8 @@ public class IntSet {
 
     /**
      * Return result of minus operation between the current set and the given.
-     * Works like operation on sets: A\B.
      *
+     * Works like operation on sets: A\B.
      * @param other
      * @return
      */
