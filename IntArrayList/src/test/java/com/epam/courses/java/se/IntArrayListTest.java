@@ -82,6 +82,21 @@ public class IntArrayListTest {
     }
 
     @Test
+    public void upwardMergeSort() throws Exception {
+        final int[] ints = {12, 0, -13, 666, 2, 56, 56, 56, 120, -1, 1, 0, Integer.MAX_VALUE, Integer.MIN_VALUE};
+        final int[] expected = Arrays.copyOf(ints, ints.length);
+        Arrays.sort(expected);
+
+        final IntArrayList list = new IntArrayList(ints);
+
+        list.upwardMergeSort();
+
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals("i = " + i, expected[i], list.get(i));
+        }
+    }
+
+    @Test
     public void recursiveIndexOf() throws Exception {
         int[] testData = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntArrayList arrayList = new IntArrayList(testData);

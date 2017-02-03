@@ -70,10 +70,19 @@ public class IntArrayList {
     /**
      * Sort the list of the elements with increasing.
      *
-     * Uses <code>mergeSort()</code>.
+     * Uses downward merge sort.
      */
     public void sort() {
         mergeSort(data, 0, size(), new int[size()]);
+    }
+
+    /**
+     * Sort the list of the elements with increasing.
+     *
+     * Uses upward merge sort.
+     */
+    public void upwardMergeSort() {
+        upwardMergeSort(data, 0, size(), new int[size()]);
     }
 
     private void mergeSort(int[] data, int startInclusive, int endExclusive, int[] free) {
@@ -88,6 +97,22 @@ public class IntArrayList {
         mergeSort(data, mid, endExclusive, free);
 
         merge(data, startInclusive, mid, endExclusive, free);
+    }
+
+    private void upwardMergeSort(int[] data, int startInclusive, int endExclusive, int[] free) {
+        int length = endExclusive - startInclusive;
+        int step = 1;
+
+        while (step < length) {
+            for (int i = startInclusive; i < endExclusive; i += step*2) {
+                if (i + step*2 < endExclusive) {
+                    merge(data, i, i + step, i + step*2, free);
+                } else if (i + step < endExclusive) {
+                    merge(data, i, i + step, endExclusive, free);
+                }
+            }
+            step *= 2;
+        }
     }
 
     private void merge(int[] data, int startInclusive, int mid, int endExclusive, int[] free) {
