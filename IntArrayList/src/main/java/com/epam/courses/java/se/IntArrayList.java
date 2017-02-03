@@ -12,6 +12,9 @@ import java.util.Arrays;
  */
 public class IntArrayList {
 
+    public static final int RECURSIVE_BINARY_SEARCH = 1;
+    public static final int CYCLE_BINARY_SEARCH = 2;
+
     private int[] data;
     private int size;
 
@@ -104,11 +107,34 @@ public class IntArrayList {
     /**
      * Returns the index of the given value or index to insert in the sorted collection.
      *
+     * Uses default search algorithm.
      * @param value
      * @return index of the value or -indexToInsert-1
      */
     public int indexOf(int value) {
-        return binarySearch(data, 0, size, value);
+        return recursiveBinarySearch(data, 0, size, value);
+    }
+
+    /**
+     * Returns the index of the given value or index to insert in the sorted collection.
+     *
+     * Uses recursive binary search algorithm.
+     * @param value
+     * @return index of the value or -indexToInsert-1
+     */
+    public int recursiveIndexOf(int value) {
+        return recursiveBinarySearch(data, 0, size, value);
+    }
+
+    /**
+     * Returns the index of the given value or index to insert in the sorted collection.
+     *
+     * Uses cyclic binary search algorithm.
+     * @param value
+     * @return index of the value or -indexToInsert-1
+     */
+    public int cyclicIndexOf(int value) {
+        return cyclicBinarySearch(data, 0, size, value);
     }
 
     /**
@@ -132,18 +158,39 @@ public class IntArrayList {
         data = Arrays.copyOf(data, newCapacity);
     }
 
-    private int binarySearch(int[] data, int startInclusive, int endExclusive, int value) {
+    private int recursiveBinarySearch(int[] data, int startInclusive, int endExclusive, int value) {
         int length = endExclusive - startInclusive;
         if (length == 0) {
-            return -startInclusive-1;
+            return -startInclusive - 1;
         }
+
         int mid = startInclusive + length/2;
         if (data[mid] == value) {
             return mid;
         } else if (data[mid] > value) {
-            return binarySearch(data, startInclusive, mid, value);
+            return recursiveBinarySearch(data, startInclusive, mid, value);
         } else {
-            return binarySearch(data, mid + 1, endExclusive, value);
+            return recursiveBinarySearch(data, mid + 1, endExclusive, value);
+        }
+    }
+
+    private int cyclicBinarySearch(int[] data, int startInclusive, int endExclusive, int value) {
+        //Every time the distance between startInclusive and endExclusive gets shorter.
+        //So we can loop while(true) and be sure that the cycle is going to stop.
+        while (true) {
+            int length = endExclusive - startInclusive;
+            if (length == 0) {
+                return -startInclusive - 1;
+            }
+
+            int mid = startInclusive + length/2;
+            if (data[mid] == value) {
+                return mid;
+            } else if (data[mid] > value) {
+                endExclusive = mid;
+            } else {
+                startInclusive = mid + 1;
+            }
         }
     }
 }

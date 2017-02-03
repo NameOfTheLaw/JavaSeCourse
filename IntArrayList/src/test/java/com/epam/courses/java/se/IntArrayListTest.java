@@ -82,25 +82,47 @@ public class IntArrayListTest {
     }
 
     @Test
-    public void indexOf() throws Exception {
+    public void recursiveIndexOf() throws Exception {
         int[] testData = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         IntArrayList arrayList = new IntArrayList(testData);
 
-        assertEquals(9, arrayList.indexOf(10));
-        assertEquals(0, arrayList.indexOf(1));
-        assertEquals(1, arrayList.indexOf(2));
-        assertEquals(3, arrayList.indexOf(4));
+        assertEquals(9, arrayList.recursiveIndexOf(10));
+        assertEquals(0, arrayList.recursiveIndexOf(1));
+        assertEquals(1, arrayList.recursiveIndexOf(2));
+        assertEquals(3, arrayList.recursiveIndexOf(4));
 
-        assertEquals(-1, arrayList.indexOf(-5));
-        assertEquals(-11, arrayList.indexOf(15));
+        assertEquals(-1, arrayList.recursiveIndexOf(-5));
+        assertEquals(-11, arrayList.recursiveIndexOf(15));
 
         testData = new int[] {-5, 1, 3, 7, 10};
         arrayList = new IntArrayList(testData);
 
-        assertEquals(-4, arrayList.indexOf(4));
-        assertEquals(-3, arrayList.indexOf(2));
-        assertEquals(0, arrayList.indexOf(-5));
-        assertEquals(-1, arrayList.indexOf(-6));
+        assertEquals(-4, arrayList.recursiveIndexOf(4));
+        assertEquals(-3, arrayList.recursiveIndexOf(2));
+        assertEquals(0, arrayList.recursiveIndexOf(-5));
+        assertEquals(-1, arrayList.recursiveIndexOf(-6));
+    }
+
+    @Test
+    public void cyclicIndexOf() throws Exception {
+        int[] testData = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        IntArrayList arrayList = new IntArrayList(testData);
+
+        assertEquals(9, arrayList.cyclicIndexOf(10));
+        assertEquals(0, arrayList.cyclicIndexOf(1));
+        assertEquals(1, arrayList.cyclicIndexOf(2));
+        assertEquals(3, arrayList.cyclicIndexOf(4));
+
+        assertEquals(-1, arrayList.cyclicIndexOf(-5));
+        assertEquals(-11, arrayList.cyclicIndexOf(15));
+
+        testData = new int[] {-5, 1, 3, 7, 10};
+        arrayList = new IntArrayList(testData);
+
+        assertEquals(-4, arrayList.cyclicIndexOf(4));
+        assertEquals(-3, arrayList.cyclicIndexOf(2));
+        assertEquals(0, arrayList.cyclicIndexOf(-5));
+        assertEquals(-1, arrayList.cyclicIndexOf(-6));
     }
 
 }
