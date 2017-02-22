@@ -1,10 +1,10 @@
-package com.epam.courses.java.se;
+package javase01.intarraylist;
 
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by andrey on 03.02.2017.

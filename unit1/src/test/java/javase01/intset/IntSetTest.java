@@ -1,12 +1,9 @@
-package com.epam.courses.java.se;
+package javase01.intset;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by andrey on 02.02.2017.

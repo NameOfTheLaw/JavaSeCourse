@@ -1,4 +1,4 @@
-package com.epam.courses.java.se;
+package javase01.intset;
 
 /**
  * Class represents standard behavior for sets.

@@ -11,9 +11,7 @@ public class Task4 {
 
     public static void main(String[] args) {
         double max = Double.NEGATIVE_INFINITY;
-        if (n*2 > Integer.MAX_VALUE) {
-            System.out.println("n is too big");
-        } else if (n <= 0) {
+        if (n <= 0) {
             System.out.println("n is too small");
         } else {
             double[] mas = generateValues(n*2);
