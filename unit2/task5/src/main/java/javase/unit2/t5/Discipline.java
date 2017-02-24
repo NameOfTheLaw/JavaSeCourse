@@ -5,7 +5,8 @@ package javase.unit2.t5;
  */
 public enum Discipline {
     MATH(false),
-    ENGLISH(true);
+    ENGLISH(true),
+    HISTORY(false);
 
     private boolean isMarkFloat;
 
@@ -13,10 +14,12 @@ public enum Discipline {
         this.isMarkFloat = isMarkFloat;
     }
 
-    public boolean isMarkFloat() {
-        return isMarkFloat;
-    }
-
+    /**
+     * Returns a formatted mark value of the current Discipline.
+     *
+     * @param markValue
+     * @return
+     */
     public Mark markOf(int markValue) {
         if (isMarkFloat) {
             return new FloatMark(markValue);
@@ -25,10 +28,22 @@ public enum Discipline {
         }
     }
 
+    /**
+     * Returns a formatted mark value of the current Discipline.
+     *
+     * @param markValue
+     * @return
+     */
     public Mark markOf(double markValue) {
         return markOf((float) markValue);
     }
 
+    /**
+     * Returns a formatted mark value of the current Discipline.
+     *
+     * @param markValue
+     * @return
+     */
     public Mark markOf(float markValue) {
         if (isMarkFloat) {
             return new FloatMark(markValue);

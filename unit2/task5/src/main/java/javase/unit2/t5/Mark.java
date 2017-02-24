@@ -5,7 +5,6 @@ package javase.unit2.t5;
  */
 public interface Mark {
 
-    Mark plus(Mark other);
     Number getValue();
 
 }
@@ -24,12 +23,7 @@ class FloatMark implements Mark {
 
     @Override
     public Number getValue() {
-        return value;
-    }
-
-    @Override
-    public FloatMark plus(Mark other) {
-        return new FloatMark(value + other.getValue().floatValue());
+        return new Float(value);
     }
 
 }
@@ -48,12 +42,7 @@ class IntegerMark implements Mark {
 
     @Override
     public Number getValue() {
-        return value;
-    }
-
-    @Override
-    public IntegerMark plus(Mark other) {
-        return new IntegerMark(value + other.getValue().intValue());
+        return new Integer(value);
     }
 
 }

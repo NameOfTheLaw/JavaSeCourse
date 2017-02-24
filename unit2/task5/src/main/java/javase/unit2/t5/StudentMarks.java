@@ -4,6 +4,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Class represents a progres report of the current student.
+ *
+ * Class is the shell for map of {@link Discipline} as key and a list of {@link Mark} as value.
+ *
  * Created by andrey on 24.02.2017.
  */
 public class StudentMarks {
@@ -16,6 +20,13 @@ public class StudentMarks {
         this.marks = marks;
     }
 
+    /**
+     * Adds list of marks to a list of specific discipline.
+     *
+     * @param discipline
+     * @param marksList
+     * @return
+     */
     public StudentMarks add(Discipline discipline, List<Mark> marksList) {
         if (marks.get(discipline) == null) {
             marks.put(discipline, marksList);
@@ -25,9 +36,33 @@ public class StudentMarks {
         return this;
     }
 
+    /**
+     * Returns list of discipline in which student takes part of.
+     *
+     * @return
+     */
     public List<Discipline> getDisciplines() {
         return marks.keySet().stream()
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a list of Marks for the current discipline
+     *
+     * @param discipline
+     * @return
+     */
+    public List<Mark> getMarks(Discipline discipline) {
+        return marks.get(discipline);
+    }
+
+    /**
+     * Returns a discipline-marks map.
+     *
+     * @return
+     */
+    public Map<Discipline, List<Mark>> getMap() {
+        return marks;
     }
 
     public StudentMarks sorted() {
@@ -46,11 +81,7 @@ public class StudentMarks {
                     .mapToDouble(x -> x.getValue().doubleValue())
                     .average()
                     .getAsDouble();
-            return averageMark1.compareTo(averageMark2);
+            return -averageMark1.compareTo(averageMark2);
         };
-    }
-
-    public List<Mark> getMarks(Discipline discipline) {
-        return marks.get(discipline);
     }
 }
