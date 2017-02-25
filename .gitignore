@@ -1,4 +1,5 @@
 LocalProjects
 .idea/
 target/
+*.html
 *.iml
