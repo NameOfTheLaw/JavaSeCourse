@@ -7,22 +7,23 @@ public class Question {
     public final static String inputPattern = "question.%d";
     public final static String inputAnswerPattern = "question.%d.answer";
 
-    private String questionUrl;
-    private String answerUrl;
+    private String questionPropKey;
+    private String answerPropKey;
 
-    public Question(String questionUrl, String answerUrl) {
-        if (questionUrl == null || answerUrl == null) {
+    public Question(String questionPropKey, String answerPropKey) {
+        if (questionPropKey == null || answerPropKey == null) {
             throw new NullPointerException();
         }
-        this.questionUrl = questionUrl;
-        this.answerUrl = answerUrl;
+
+        this.questionPropKey = questionPropKey;
+        this.answerPropKey = answerPropKey;
     }
 
-    public String getQuestionUrl() {
-        return questionUrl;
+    public String getQuestionPropKey() {
+        return questionPropKey;
     }
 
-    public String getAnswerUrl() {
-        return answerUrl;
+    public String getAnswerPropKey() {
+        return answerPropKey;
     }
 }
