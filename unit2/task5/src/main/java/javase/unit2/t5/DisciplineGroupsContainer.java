@@ -28,7 +28,9 @@ public class DisciplineGroupsContainer {
      * @return
      */
     public DisciplineGroupsContainer add(Discipline discipline, Student student) {
-        if (discipline == null || student == null) throw new NullPointerException();
+        Objects.requireNonNull(discipline);
+        Objects.requireNonNull(student);
+
         disciplineGroups.get(discipline).put(student, new ArrayList<>());
         return this;
     }
@@ -81,7 +83,33 @@ public class DisciplineGroupsContainer {
      * @param student
      */
     public void remove(Discipline discipline, Student student) {
-        if (discipline == null || student == null) throw new NullPointerException();
+        Objects.requireNonNull(discipline);
+        Objects.requireNonNull(student);
+
         disciplineGroups.get(discipline).remove(student);
+    }
+
+    /**
+     * Returns a set of students for the given discipline.
+     *
+     * @param discipline
+     * @return
+     */
+    public Set<Student> getStudentsByDiscipline(Discipline discipline) {
+        Objects.requireNonNull(discipline);
+
+        return disciplineGroups.get(discipline).keySet();
+    }
+
+    /**
+     * Returns a map of student and list of his marks for every student of the given discipline.
+     *
+     * @param discipline
+     * @return
+     */
+    public Map<Student, List<Mark>> getStudentsWithMarksByDiscipline(Discipline discipline) {
+        Objects.requireNonNull(discipline);
+
+        return disciplineGroups.get(discipline);
     }
 }

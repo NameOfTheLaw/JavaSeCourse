@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -116,6 +117,62 @@ public class DisciplineGroupsTest {
     @Test(expected = NullPointerException.class)
     public void testRemoveIfDisciplineIsNull() {
         container.remove(null, new Student(15, "noname"));
+    }
+
+    @Test
+    public void testGetStudentsByDiscipline() {
+        Set<Student> studentsGroup = container.getStudentsByDiscipline(MATH);
+        assertTrue(studentsGroup.contains(student1));
+        assertTrue(studentsGroup.contains(student2));
+        assertFalse(studentsGroup.contains(student3));
+
+        studentsGroup = container.getStudentsByDiscipline(ENGLISH);
+        assertTrue(studentsGroup.contains(student1));
+        assertTrue(studentsGroup.contains(student3));
+        assertFalse(studentsGroup.contains(student2));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetStudentsByDisciplineWithNullArg() {
+        Set<Student> studentsGroup = container.getStudentsByDiscipline(null);
+    }
+
+    @Test
+    public void testGetStudentsByDisciplineWhereOutputIsEmpty() {
+        Set<Student> studentsGroup = container.getStudentsByDiscipline(HISTORY);
+        assertTrue(studentsGroup.isEmpty());
+    }
+
+    @Test
+    public void testGetStudentsByDisciplineWithMarksCheckingAreAllStudentsInOutput() {
+        Map<Student, List<Mark>> studentsGroup = container.getStudentsWithMarksByDiscipline(MATH);
+        Set<Student> studentsSet = studentsGroup.keySet();
+        assertTrue(studentsSet.contains(student1));
+        assertTrue(studentsSet.contains(student2));
+        assertFalse(studentsSet.contains(student3));
+    }
+
+    @Test
+    public void testGetStudentsByDisciplineWithMarksCheckingAreStudentsHaveCorrectMarks() {
+        Map<Student, List<Mark>> studentsGroup = container.getStudentsWithMarksByDiscipline(MATH);
+
+        assertArrayEquals(
+                new int[] {5, 5, 4, 5},
+                studentsGroup.get(student1).stream()
+                        .mapToInt(x -> x.getValue().intValue())
+                        .toArray()
+        );
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetStudentsByDisciplineWithNullArgWithMarks() {
+        Map<Student, List<Mark>> studentsGroup = container.getStudentsWithMarksByDiscipline(null);
+    }
+
+    @Test
+    public void testGetStudentsByDisciplineWhereOutputIsEmptyWithMarks() {
+        Map<Student, List<Mark>> studentsGroup = container.getStudentsWithMarksByDiscipline(HISTORY);
+        assertTrue(studentsGroup.isEmpty());
     }
 
 }
