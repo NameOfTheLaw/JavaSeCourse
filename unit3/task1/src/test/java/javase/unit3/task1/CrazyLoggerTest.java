@@ -112,6 +112,26 @@ public class CrazyLoggerTest {
         logger.findAll(null);
     }
 
+    @Test
+    public void testPrintFirstReturns() {
+        logger.log("mes1");
+        assertTrue(logger.printFirstIfExists("mes1"));
+        assertFalse(logger.printFirstIfExists("mes2"));
+    }
+
+    @Test
+    public void testPrintLastReturns() {
+        logger.log("mes1");
+        assertTrue(logger.printLastIfExists("mes1"));
+        assertFalse(logger.printLastIfExists("mes2"));
+    }
+
+    @Test
+    public void testPrintAllReturns() {
+        logger.log("mes1");
+        assertTrue(logger.printAllIfExists("mes1"));
+        assertFalse(logger.printAllIfExists("mes2"));
+    }
 
 
 }

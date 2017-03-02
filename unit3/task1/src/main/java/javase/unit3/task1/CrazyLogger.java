@@ -105,6 +105,45 @@ public class CrazyLogger {
         return resultBuilder.toString();
     }
 
+    public boolean printFirstIfExists(String stringToFind) {
+        Objects.requireNonNull(stringToFind);
+
+        String logRecord = findFirst(stringToFind);
+
+        if (logRecord.isEmpty()) {
+            return false;
+        } else {
+            System.out.println(logRecord);
+            return true;
+        }
+    }
+
+    public boolean printLastIfExists(String stringToFind) {
+        Objects.requireNonNull(stringToFind);
+
+        String logRecord = findLast(stringToFind);
+
+        if (logRecord.isEmpty()) {
+            return false;
+        } else {
+            System.out.println(logRecord);
+            return true;
+        }
+    }
+
+    public boolean printAllIfExists(String stringToFind) {
+        Objects.requireNonNull(stringToFind);
+
+        String logRecords = findAll(stringToFind);
+
+        if (logRecords.isEmpty()) {
+            return false;
+        } else {
+            System.out.println(logRecords);
+            return true;
+        }
+    }
+
     private boolean separatorIn(String stringToFindSeparatorIn) {
         return stringToFindSeparatorIn.contains(messagesSeparator);
     }
