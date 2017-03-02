@@ -1,29 +1,31 @@
 package javase.unit3.task2;
 
+import java.util.Objects;
+
 /**
  * Created by andrey on 25.02.2017.
  */
 public class Question {
-    public final static String inputPattern = "question.%d";
-    public final static String inputAnswerPattern = "question.%d.answer";
+    public final static String QUESTION_KEY_FORMAT = "question.%d";
+    public final static String ANSWER_KEY_FORMAT = "question.%d.answer";
 
-    private String questionPropKey;
-    private String answerPropKey;
+    private String questionKey;
+    private String answerKey;
 
-    public Question(String questionPropKey, String answerPropKey) {
-        if (questionPropKey == null || answerPropKey == null) {
-            throw new NullPointerException();
-        }
+    public Question(String questionKey, String answerKey) {
+        Objects.requireNonNull(questionKey);
+        Objects.requireNonNull(answerKey);
 
-        this.questionPropKey = questionPropKey;
-        this.answerPropKey = answerPropKey;
+        this.questionKey = questionKey;
+        this.answerKey = answerKey;
     }
 
-    public String getQuestionPropKey() {
-        return questionPropKey;
+    public String getQuestionKey() {
+        return questionKey;
     }
 
-    public String getAnswerPropKey() {
-        return answerPropKey;
+    public String getAnswerKey() {
+        return answerKey;
     }
+
 }

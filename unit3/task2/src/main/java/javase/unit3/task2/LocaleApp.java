@@ -5,20 +5,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-/**
- * Created by andrey on 25.02.2017.
- */
 public class LocaleApp {
 
     private final static Locale defaultLocale = Locale.ENGLISH;
     private final static String resourceBundleUrl = "messages";
-    private final static String questionOutputPattern = "%d) %s";
+    private final static String questionOutputFormat = "%d) %s";
 
     private List<Question> questions;
     private Locale choosenLocale;
     private Map<String, Locale> supportedLocales;
     private ResourceBundle resourceBundle;
     private BufferedReader bufferedReader;
+
+    public static void main(String[] args) {
+        LocaleApp localeApp = LocaleApp.newInstance();
+        localeApp.run();
+    }
 
     private LocaleApp() {}
 
@@ -63,7 +65,7 @@ public class LocaleApp {
 
                 if (userInput > 0 && userInput <= questions.size()) {
                     System.out.println(resourceBundle.getString(
-                            questions.get(userInput - 1).getAnswerPropKey())
+                            questions.get(userInput - 1).getAnswerKey())
                     );
                 } else {
                     System.out.println(resourceBundle.getString("error.outofindex"));
@@ -77,9 +79,9 @@ public class LocaleApp {
         System.out.println(resourceBundle.getString("questions.intro"));
         for (int i = 0; i < questions.size(); i++) {
             System.out.println(String.format(
-                    questionOutputPattern,
+                    questionOutputFormat,
                     i + 1,
-                    resourceBundle.getString(questions.get(i).getQuestionPropKey()))
+                    resourceBundle.getString(questions.get(i).getQuestionKey()))
             );
         }
     }
@@ -99,13 +101,10 @@ public class LocaleApp {
 
         int i = 1;
         while (true) {
-            String questionUrl = String.format(Question.inputPattern, i);
-            String answerUrl = String.format(Question.inputAnswerPattern, i);
-            if (resourceBundle.containsKey(questionUrl)) {
-                questions.add(new Question(
-                        questionUrl,
-                        answerUrl)
-                );
+            String questionKey = String.format(Question.QUESTION_KEY_FORMAT, i);
+            String answerKey = String.format(Question.ANSWER_KEY_FORMAT, i);
+            if (resourceBundle.containsKey(questionKey)) {
+                questions.add(new Question(questionKey,answerKey));
             } else {
                 return questions;
             }
