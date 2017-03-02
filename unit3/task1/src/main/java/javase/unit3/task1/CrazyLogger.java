@@ -2,6 +2,7 @@ package javase.unit3.task1;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Classic logger without log types.
@@ -9,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  * Created by andrey on 25.02.2017.
  */
 public class CrazyLogger {
-    private StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder logBuilder = new StringBuilder();
     public final static String dataTimePattern = "dd-MM-YYYY : HH-mm";
     public final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dataTimePattern);
     public final static String messagesSeparator = ";";
@@ -21,22 +22,18 @@ public class CrazyLogger {
      * @param message
      */
     public void log(String  message) {
-        if (message == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(message);
 
-        if (hasSeparator(message)) {
+        if (separatorIn(message)) {
             throw new IllegalArgumentException("String has CrazyLogger's separator symbol \"" + messagesSeparator +"\".");
         }
 
         if (!message.isEmpty()) {
-            stringBuilder.append(LocalDateTime.now().format(dateTimeFormatter))
+            logBuilder.append(LocalDateTime.now().format(dateTimeFormatter))
                     .append(messageInnerSeparator)
                     .append(message)
                     .append(messagesSeparator);
         }
-
-        System.out.println(stringBuilder);
     }
 
     /**
@@ -45,7 +42,7 @@ public class CrazyLogger {
      * @return
      */
     public String getLog() {
-        return stringBuilder.toString();
+        return logBuilder.toString();
     }
 
     /**
@@ -55,13 +52,15 @@ public class CrazyLogger {
      * @return
      */
     public String findFirst(String stringToFind) {
-        if (hasSeparator(stringToFind)) {
+        Objects.requireNonNull(stringToFind);
+
+        if (separatorIn(stringToFind)) {
             throw new IllegalArgumentException("String has CrazyLogger's separator symbol \"" + messagesSeparator +"\".");
         }
 
-        int index = stringBuilder.indexOf(stringToFind);
+        int index = logBuilder.indexOf(stringToFind);
 
-        return getSubstringOf(index, stringToFind.length());
+        return getLogRecord(index, stringToFind.length());
     }
 
     /**
@@ -71,13 +70,15 @@ public class CrazyLogger {
      * @return
      */
     public String findLast(String stringToFind) {
-        if (hasSeparator(stringToFind)) {
+        Objects.requireNonNull(stringToFind);
+
+        if (separatorIn(stringToFind)) {
             throw new IllegalArgumentException("String has CrazyLogger's separator symbol \"" + messagesSeparator +"\".");
         }
 
-        int index = stringBuilder.lastIndexOf(stringToFind);
+        int index = logBuilder.lastIndexOf(stringToFind);
 
-        return getSubstringOf(index, stringToFind.length());
+        return getLogRecord(index, stringToFind.length());
     }
 
     /**
@@ -87,33 +88,35 @@ public class CrazyLogger {
      * @return
      */
     public String findAll(String stringToFind) {
-        if (hasSeparator(stringToFind)) {
+        Objects.requireNonNull(stringToFind);
+
+        if (separatorIn(stringToFind)) {
             throw new IllegalArgumentException("String has CrazyLogger's separator symbol \"" + messagesSeparator +"\".");
         }
 
-        int nextIndex = 0;
         StringBuilder resultBuilder = new StringBuilder();
+        int nextIndex = 0;
         do {
-            nextIndex = stringBuilder.indexOf(stringToFind, nextIndex);
-            resultBuilder.append(getSubstringOf(nextIndex, stringToFind.length()));
+            nextIndex = logBuilder.indexOf(stringToFind, nextIndex);
+            resultBuilder.append(getLogRecord(nextIndex, stringToFind.length()));
             nextIndex += 1;
         } while (nextIndex > 0);
 
         return resultBuilder.toString();
     }
 
-    private boolean hasSeparator(String stringToFind) {
-        return stringToFind.contains(messagesSeparator);
+    private boolean separatorIn(String stringToFindSeparatorIn) {
+        return stringToFindSeparatorIn.contains(messagesSeparator);
     }
 
-    private String getSubstringOf(int index, int stringLength) {
+    private String getLogRecord(int index, int stringLength) {
 
         if (index >= 0) {
-            int leftInclude = stringBuilder.lastIndexOf(messagesSeparator, index);
-            if (leftInclude < 0) leftInclude = 0;
+            int currentRecordStartIndex = logBuilder.lastIndexOf(messagesSeparator, index);
+            if (currentRecordStartIndex < 0) currentRecordStartIndex = 0;
 
-            int rightExclude = stringBuilder.indexOf(messagesSeparator, index + stringLength - 1);
-            return stringBuilder.substring(leftInclude, rightExclude);
+            int nextRecordStartIndex = logBuilder.indexOf(messagesSeparator, index + stringLength - 1);
+            return logBuilder.substring(currentRecordStartIndex, nextRecordStartIndex);
         }
 
         return "";

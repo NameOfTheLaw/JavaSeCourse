@@ -97,4 +97,21 @@ public class CrazyLoggerTest {
         logger.findAll("option1; option2");
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testFindFirstIfArgIsNull() {
+        logger.findFirst(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindLastIfArgIsNull() {
+        logger.findLast(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindAllIfArgIsNull() {
+        logger.findAll(null);
+    }
+
+
+
 }
