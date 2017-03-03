@@ -24,7 +24,7 @@ public class RegExpSearcher {
 
     public static void main(String[] args) {
         try {
-            RegExpSearcher searcher = RegExpSearcher.from(new File("article.html"), Charset.forName("windows-1251"));
+            RegExpSearcher searcher = RegExpSearcher.from(new File("articl2e.html"), Charset.forName("windows-1251"));
 
             StringBuilder stringBuilder = new StringBuilder("Links in text is ");
 
@@ -44,7 +44,7 @@ public class RegExpSearcher {
                     .forEach(System.out::println);
 
         } catch (IOException e) {
-            System.out.println("Something wrong with file or filesystem.");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -56,7 +56,12 @@ public class RegExpSearcher {
         RegExpSearcher searcher = new RegExpSearcher();
         searcher.reader = new BufferedReader(reader);
         searcher.sentencesWithLinks = new ArrayList<>();
-        searcher.analyseReader();
+        try {
+            searcher.analyseReader();
+        } finally {
+            searcher.reader.close();
+        }
+
         return searcher;
     }
 
