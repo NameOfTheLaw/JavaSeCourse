@@ -2,9 +2,6 @@ package javase.unit3.task2;
 
 import java.util.Objects;
 
-/**
- * Created by andrey on 25.02.2017.
- */
 public class QuestionAndAnswer {
     public final static String QUESTION_KEY_FORMAT = "question.%d";
     public final static String ANSWER_KEY_FORMAT = "question.%d.answer";

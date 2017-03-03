@@ -1,69 +1,85 @@
 package javase.unit3.task2;
 
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Created by andrey on 02.03.2017.
- */
 public class ResourcesContainer {
 
     private final static String questionInListFormat = "%d) %s";
 
     private ResourceBundle resourceBundle;
     private List<QuestionAndAnswer> questionAndAnswers;
+    private Charset outputCharset;
 
-    public ResourcesContainer(ResourceBundle resourceBundle) {
+    public ResourcesContainer(ResourceBundle resourceBundle, Charset outputCharset) {
         this.resourceBundle = resourceBundle;
+        this.outputCharset = outputCharset;
         questionAndAnswers = loadQuestionsFrom(resourceBundle);
     }
 
-    public ResourcesContainer(String resourceBundleUrl, Locale locale) {
-        this(ResourceBundle.getBundle(resourceBundleUrl, locale));
+    public ResourcesContainer(ResourceBundle resourceBundle) {
+        this(resourceBundle, Charset.defaultCharset());
     }
 
-    public void printAll(PrintStream printStream) {
-        System.out.println(resourceBundle.getString("questions.intro"));
+    public ResourcesContainer(String resourceBundleUrl, Locale locale) {
+        this(ResourceBundle.getBundle(resourceBundleUrl, locale), Charset.defaultCharset());
+    }
+
+    public ResourcesContainer(String resourceBundleUrl, Locale locale, Charset outputCharset) {
+        this(ResourceBundle.getBundle(resourceBundleUrl, locale), outputCharset);
+    }
+
+    public void printAllQuestions(PrintStream printStream) throws UnsupportedEncodingException {
+        printStream.println(getStringWithEncoding("questions.intro"));
         for (int i = 0; i < questionAndAnswers.size(); i++) {
             printStream.println(String.format(
                     questionInListFormat,
                     i + 1,
-                    resourceBundle.getString(questionAndAnswers.get(i).getQuestionKey()))
+                    getStringWithEncoding(questionAndAnswers.get(i).getQuestionKey()))
             );
         }
     }
 
-    public void printAll() {
-        printAll(System.out);
+    public void printAllQuestions() throws UnsupportedEncodingException {
+        printAllQuestions(System.out);
     }
 
     public String getQuestion(int index) {
-        if (index >= questionAndAnswers.size() || index < 0) {
-            throw new IllegalArgumentException();
-        }
+        checkIndexToBeLegal(index);
 
-        return resourceBundle.getString(
-                questionAndAnswers.get(index).getQuestionKey());
+        return getStringWithEncoding(
+                questionAndAnswers.get(index - 1).getQuestionKey());
     }
 
     public String getAnswer(int index) {
-        if (index >= questionAndAnswers.size() || index < 0) {
-            throw new IllegalArgumentException();
-        }
+        checkIndexToBeLegal(index);
 
-        return resourceBundle.getString(
-                questionAndAnswers.get(index).getAnswerKey());
+        return getStringWithEncoding(
+                questionAndAnswers.get(index - 1).getAnswerKey());
     }
 
     public List<String> getAllQuestions() {
         return questionAndAnswers.stream()
-                .map((x) -> resourceBundle.getString(x.getQuestionKey()))
+                .map((x) -> getStringWithEncoding(x.getQuestionKey()))
                 .collect(Collectors.toList());
     }
 
     public String getString(String key) {
-        return resourceBundle.getString(key);
+        return getStringWithEncoding(key);
+    }
+
+    private String getStringWithEncoding(String key) {
+        String rawString = resourceBundle.getString(key);
+        return new String(rawString.getBytes(outputCharset));
+    }
+
+    private void checkIndexToBeLegal(int index) {
+        if (index > questionAndAnswers.size() || index < 1) {
+            throw new IllegalArgumentException();
+        }
     }
 
     private List<QuestionAndAnswer> loadQuestionsFrom(ResourceBundle resourceBundle) {

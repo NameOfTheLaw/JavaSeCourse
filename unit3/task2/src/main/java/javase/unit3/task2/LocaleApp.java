@@ -1,46 +1,51 @@
 package javase.unit3.task2;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 
 public class LocaleApp {
 
     private final static Locale defaultLocale = Locale.ENGLISH;
+    private final static Charset defaultConsoleCharset = Charset.forName("ISO-8859-1");
     private final static String resourceBundleUrl = "messages";
 
     private Locale chosenLocale;
     private Map<String, Locale> supportedLocales;
     private BufferedReader bufferedReader;
     private ResourcesContainer resourcesContainer;
+    private PrintStream printStream;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
         LocaleApp localeApp = new  LocaleApp();
         localeApp.run();
     }
 
-    public LocaleApp(InputStream inputStream) {
-        resourcesContainer = new ResourcesContainer(resourceBundleUrl, defaultLocale);
-
+    public LocaleApp(InputStream inputStream, OutputStream outputStream) {
         bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        printStream = new PrintStream(outputStream);
+
+        resourcesContainer = new ResourcesContainer(resourceBundleUrl, defaultLocale, defaultConsoleCharset);
 
         supportedLocales = loadSupportedLocales();
     }
 
     public LocaleApp() {
-        this(System.in);
+        this(System.in, System.out);
     }
 
-    public void run() {
+    public void run() throws UnsupportedEncodingException {
 
             while (!isLocaleSet()) {
-                System.out.println(resourcesContainer.getString("choose.locale"));
+                printStream.println(resourcesContainer.getString("choose.locale"));
 
                 String userInput;
-                System.out.print(">");
+                printStream.print(">");
                 try {
                     userInput = bufferedReader.readLine();
                 } catch (IOException e) {
-                    System.out.println(resourcesContainer.getString("error.input"));
+                    printStream.println(resourcesContainer.getString("error.input"));
                     continue;
                 }
 
@@ -48,34 +53,34 @@ public class LocaleApp {
             }
 
             while (true) {
-                resourcesContainer.printAll(System.out);
+                resourcesContainer.printAllQuestions(printStream);
 
                 int userInput;
-                System.out.print("> ");
+                printStream.print("> ");
                 try {
                     userInput = Integer.valueOf(bufferedReader.readLine());
                 } catch (NumberFormatException | IOException e) {
-                    System.out.println(resourcesContainer.getString("error.input"));
-                    System.out.println();
+                    printStream.println(resourcesContainer.getString("error.input"));
+                    printStream.println();
                     continue;
                 }
 
                 try {
-                    System.out.println(resourcesContainer.getAnswer(userInput));
+                    printStream.println(resourcesContainer.getAnswer(userInput));
                 } catch (IllegalArgumentException e) {
-                    System.out.println(resourcesContainer.getString("error.outofindex"));
+                    printStream.println(resourcesContainer.getString("error.outofindex"));
                 }
 
-                System.out.println();
+                printStream.println();
             }
     }
 
     private void tryToSetLocale(String userTypedLocale) {
         if (userTypedLocale != null && !userTypedLocale.isEmpty() && supportedLocales.containsKey(userTypedLocale)) {
             chosenLocale = supportedLocales.get(userTypedLocale);
-            resourcesContainer = new ResourcesContainer(resourceBundleUrl, chosenLocale);
+            resourcesContainer = new ResourcesContainer(resourceBundleUrl, chosenLocale, defaultConsoleCharset);
         } else {
-            System.out.println(resourcesContainer.getString("error.input"));
+            printStream.println(resourcesContainer.getString("error.input"));
         }
     }
 

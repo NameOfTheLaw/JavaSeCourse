@@ -7,24 +7,24 @@ import static org.junit.Assert.*;
 public class QuestionAndAnswerTest {
 
     @Test
-    public void testCreateQuestion() {
+    public void testCreating() {
         QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer("", "");
         assertNotNull(questionAndAnswer.getQuestionKey());
         assertNotNull(questionAndAnswer.getAnswerKey());
     }
 
     @Test(expected = NullPointerException.class)
-    public void testCreateQuestionWithNullArg1() {
+    public void testCreatingWithNullArg1() {
         new QuestionAndAnswer(null, "");
     }
 
     @Test(expected = NullPointerException.class)
-    public void testCreateQuestionWithNullArg2() {
+    public void testCreatingWithNullArg2() {
         new QuestionAndAnswer("", null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testCreateQuestionWithNullArgs() {
+    public void testCreatingQuestionWithNullArgs() {
         new QuestionAndAnswer(null, null);
     }
 
