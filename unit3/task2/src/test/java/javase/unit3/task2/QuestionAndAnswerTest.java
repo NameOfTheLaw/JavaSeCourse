@@ -4,28 +4,28 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class QuestionTest {
+public class QuestionAndAnswerTest {
 
     @Test
     public void testCreateQuestion() {
-        Question question = new Question("", "");
-        assertNotNull(question.getQuestionKey());
-        assertNotNull(question.getAnswerKey());
+        QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer("", "");
+        assertNotNull(questionAndAnswer.getQuestionKey());
+        assertNotNull(questionAndAnswer.getAnswerKey());
     }
 
     @Test(expected = NullPointerException.class)
     public void testCreateQuestionWithNullArg1() {
-        new Question(null, "");
+        new QuestionAndAnswer(null, "");
     }
 
     @Test(expected = NullPointerException.class)
     public void testCreateQuestionWithNullArg2() {
-        new Question("", null);
+        new QuestionAndAnswer("", null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testCreateQuestionWithNullArgs() {
-        new Question(null, null);
+        new QuestionAndAnswer(null, null);
     }
 
 }
