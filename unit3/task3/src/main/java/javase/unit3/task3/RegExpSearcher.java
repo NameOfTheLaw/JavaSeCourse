@@ -4,44 +4,43 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * Created by andrey on 26.02.2017.
  */
 public class RegExpSearcher {
-    public static final Pattern LINK_PATTERN = Pattern.compile("[Рр]ис((\\.\\s?)|(ун((ке)|(ка)|(ок))\\s))(\\d+)");
-    public static final Pattern SENTENCE_PATTERN = Pattern.compile("(([\\.!?])|(^))((([Рр]ис(\\.\\s?)(\\d+))|[^\\.!?])+[\\.!?])");
-    public static final int LINK_GROUP_IN_PATTERN = 8;
-    public static final int SENTENCE_GROUP_IN_PATTERN = 4;
+    public static final Pattern LINK_PATTERN = Pattern.compile("[Рр]ис(\\.\\s?|ун(ка|ке|ок)\\s)(\\d+)");
+    public static final int LINK_GROUP_IN_PATTERN = 3;
+    public static final Pattern SENTENCE_PATTERN = Pattern.compile("([\\.!?]|^)((([Рр]ис\\.\\s?(\\d+))|[^\\.!?])+[\\.!?])");
+    public static final int SENTENCE_GROUP_IN_PATTERN = 2;
 
     private BufferedReader reader;
-    private int highestLinkNumber;
-    private boolean isLinksSequential;
+    private boolean linksSequential;
+    private boolean inputHasLinks;
     private List<String> sentencesWithLinks;
 
     public static void main(String[] args) {
-        RegExpSearcher searher = null;
         try {
-            searher = RegExpSearcher.byFileNameAndEncoding("article.html", Charset.forName("windows-1251"));
+            RegExpSearcher searcher = RegExpSearcher.from(new File("article.html"), Charset.forName("windows-1251"));
 
             StringBuilder stringBuilder = new StringBuilder("Links in text is ");
 
-            if (searher.isLinksSequential()) {
+            if (searcher.isLinksSequential()) {
                 stringBuilder.append("sequential. ");
             } else {
                 stringBuilder.append("non sequential. ");
             }
 
             stringBuilder.append("List of all sentences with links (")
-                    .append(searher.getSentencesWithLinks().size())
+                    .append(searcher.getSentencesWithLinks().size())
                     .append("):");
 
             System.out.println(stringBuilder);
 
-            searher.getSentencesWithLinks().stream()
+            searcher.getSentencesWithLinks()
                     .forEach(System.out::println);
 
         } catch (IOException e) {
@@ -51,20 +50,33 @@ public class RegExpSearcher {
 
     private RegExpSearcher() {}
 
-    public static RegExpSearcher from(String stringToSearch) throws IOException {
-        RegExpSearcher searher = new RegExpSearcher();
-        searher.reader = new BufferedReader(new StringReader(stringToSearch));
-        searher.sentencesWithLinks = new ArrayList<>();
-        searher.analyseReader();
-        return searher;
+    public static RegExpSearcher from(Reader reader) throws IOException {
+        Objects.requireNonNull(reader);
+
+        RegExpSearcher searcher = new RegExpSearcher();
+        searcher.reader = new BufferedReader(reader);
+        searcher.sentencesWithLinks = new ArrayList<>();
+        searcher.analyseReader();
+        return searcher;
     }
 
-    public static RegExpSearcher byFileNameAndEncoding(String fileName, Charset charset) throws IOException {
-        RegExpSearcher searher = new RegExpSearcher();
-        searher.reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), charset));
-        searher.sentencesWithLinks = new ArrayList<>();
-        searher.analyseReader();
-        return searher;
+    public static RegExpSearcher from(String stringToSearch) throws IOException {
+        Objects.requireNonNull(stringToSearch);
+
+        return from(new StringReader(stringToSearch));
+    }
+
+    public static RegExpSearcher from(File file, Charset charset) throws IOException {
+        Objects.requireNonNull(file);
+        Objects.requireNonNull(charset);
+
+        return from(new InputStreamReader(new FileInputStream(file), charset));
+    }
+
+    public static RegExpSearcher from(File file) throws IOException {
+        Objects.requireNonNull(file);
+
+        return from(new InputStreamReader(new FileInputStream(file), Charset.defaultCharset()));
     }
 
     public List<String> getSentencesWithLinks() {
@@ -72,12 +84,16 @@ public class RegExpSearcher {
     }
 
     public boolean isLinksSequential() {
-        return isLinksSequential;
+        return linksSequential;
+    }
+
+    public boolean hasLinks() {
+        return inputHasLinks;
     }
 
     private void analyseReader() throws IOException {
-        isLinksSequential = true;
-        highestLinkNumber = 0;
+        linksSequential = true;
+        int highestLinkNumber = 0;
         String line;
 
         while ((line = reader.readLine()) != null) {
@@ -91,7 +107,7 @@ public class RegExpSearcher {
                 if (linkNumber > highestLinkNumber) {
                     highestLinkNumber = linkNumber;
                 } else if (linkNumber < highestLinkNumber) {
-                    isLinksSequential = false;
+                    linksSequential = false;
                 }
 
                 Matcher sentenceMather = SENTENCE_PATTERN.matcher(line);
@@ -103,7 +119,10 @@ public class RegExpSearcher {
                     lastSentenceIndex = sentenceMather.end() - 1;
                 }
             }
+        }
 
+        if (highestLinkNumber > 0) {
+            inputHasLinks = true;
         }
     }
 }
