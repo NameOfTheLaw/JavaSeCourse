@@ -2,9 +2,9 @@ package javase.unit3.task3;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -13,15 +13,19 @@ import static org.junit.Assert.*;
  */
 public class RegExpSearcherTest {
 
+    @Test(expected = NullPointerException.class)
+    public void testMethodFromIfFileIsNull() throws IOException {
+        RegExpSearcher.from(null, Charset.defaultCharset());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testMethodFromIfNullFile() throws IOException {
+        RegExpSearcher.from(new File("test"), null);
+    }
+
     @Test
-    public void testOfUsage() throws IOException {
-        RegExpSearcher searher = RegExpSearcher.byFileNameAndEncoding("article.html", Charset.forName("windows-1251"));
-
-        long sentencesCount = searher.getSentencesWithLinks().stream()
-                .count();
-        assertTrue(sentencesCount > 100);
-
-        assertFalse(searher.isLinksSequential());
+    public void testMethodFromEmptyString() throws IOException {
+        RegExpSearcher.from("");
     }
 
     @Test
@@ -58,22 +62,36 @@ public class RegExpSearcherTest {
 
     @Test
     public void testIsLinksSequential() throws IOException {
-        RegExpSearcher searher1 = RegExpSearcher.from("(Рис.1) (Рис.2) (Рис.2) (Рис.3)");
-        assertTrue(searher1.isLinksSequential());
-        RegExpSearcher searher2 = RegExpSearcher.from("(Рис.1) (Рис.3) (Рис.2) (Рис.2)");
-        assertFalse(searher2.isLinksSequential());
+        RegExpSearcher searcher1 = RegExpSearcher.from("(Рис.1) (Рис.2) (Рис.2) (Рис.3)");
+        assertTrue(searcher1.isLinksSequential());
+        RegExpSearcher searcher2 = RegExpSearcher.from("(Рис.1) (Рис.3) (Рис.2) (Рис.2)");
+        assertFalse(searcher2.isLinksSequential());
+    }
+
+    @Test
+    public void testHasLinks() throws IOException {
+        RegExpSearcher searcher1 = RegExpSearcher.from("(Рис.1) (Рис.2) (Рис.2) (Рис.3)");
+        assertTrue(searcher1.hasLinks());
+        RegExpSearcher searcher2 = RegExpSearcher.from("аааа. бббб. ввввв. гггг.");
+        assertFalse(searcher2.hasLinks());
+    }
+
+    @Test
+    public void testHasLinksIfSearchableObjectIsEmpty() throws IOException {
+        RegExpSearcher searcher = RegExpSearcher.from("");
+        assertFalse(searcher.hasLinks());
     }
 
     @Test
     public void testGetSentencesWithLinksIfThereIsNoLinks() throws IOException {
-        RegExpSearcher searher = RegExpSearcher.from("аааа. бббб. ввввв. гггг.");
-        assertArrayEquals(new String[] {}, searher.getSentencesWithLinks().toArray());
+        RegExpSearcher searcher = RegExpSearcher.from("аааа. бббб. ввввв. гггг.");
+        assertArrayEquals(new String[] {}, searcher.getSentencesWithLinks().toArray());
     }
 
     @Test
     public void testGetSentencesWithLinks() throws IOException {
-        RegExpSearcher searher = RegExpSearcher.from("aaaaa (Рис.1) аааа. бббб(Рис.2). ввв ввввв. (Рис.3) гггг (Рис.4).");
-        assertArrayEquals(new String[] {"aaaaa (Рис.1) аааа.", " бббб(Рис.2).", " (Рис.3) гггг (Рис.4)."}, searher.getSentencesWithLinks().toArray());
+        RegExpSearcher searcher = RegExpSearcher.from("aaaaa (Рис.1) аааа. бббб(Рис.2). ввв ввввв. (Рис.3) гггг (Рис.4).");
+        assertArrayEquals(new String[] {"aaaaa (Рис.1) аааа.", " бббб(Рис.2).", " (Рис.3) гггг (Рис.4)."}, searcher.getSentencesWithLinks().toArray());
     }
 
 }
