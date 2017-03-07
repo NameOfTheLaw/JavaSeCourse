@@ -8,6 +8,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Searcher for sentences in text and links on pictures in them.
+ */
 public class RegExpSearcher {
     public static final Pattern LINK_PATTERN = Pattern.compile("[Рр]ис(\\.\\s?|ун(ка|ке|ок)\\s)(\\d+)");
     public static final int LINK_GROUP_IN_PATTERN = 3;
@@ -47,6 +50,13 @@ public class RegExpSearcher {
 
     private RegExpSearcher() {}
 
+    /**
+     * Creates a searcher from reader.
+     *
+     * @param reader an object to search from
+     * @return searcher with results
+     * @throws IOException if reader contains incorrect data
+     */
     public static RegExpSearcher from(Reader reader) throws IOException {
         Objects.requireNonNull(reader);
 
@@ -62,12 +72,27 @@ public class RegExpSearcher {
         return searcher;
     }
 
+    /**
+     * Creates a searcher from string.
+     *
+     * @param stringToSearch a string to search from
+     * @return searcher with results
+     * @throws IOException if reader contains incorrect data
+     */
     public static RegExpSearcher from(String stringToSearch) throws IOException {
         Objects.requireNonNull(stringToSearch);
 
         return from(new StringReader(stringToSearch));
     }
 
+    /**
+     * Creates a searcher from file and charset.
+     *
+     * @param file a file to search from
+     * @param charset charset for file encoding
+     * @return searcher with results
+     * @throws IOException if reader contains incorrect data
+     */
     public static RegExpSearcher from(File file, Charset charset) throws IOException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(charset);
@@ -75,20 +100,42 @@ public class RegExpSearcher {
         return from(new InputStreamReader(new FileInputStream(file), charset));
     }
 
+    /**
+     * Creates a searcher from file with default charset.
+     *
+     * @param file a file to search from
+     * @return searcher with results
+     * @throws IOException if reader contains incorrect data
+     */
     public static RegExpSearcher from(File file) throws IOException {
         Objects.requireNonNull(file);
 
         return from(new InputStreamReader(new FileInputStream(file), Charset.defaultCharset()));
     }
 
+    /**
+     * Returns all sentences which contains links.
+     *
+     * @return
+     */
     public List<String> getSentencesWithLinks() {
         return sentencesWithLinks;
     }
 
+    /**
+     * Returns if links in given data is sequential or not.
+     *
+     * @return
+     */
     public boolean isLinksSequential() {
         return linksSequential;
     }
 
+    /**
+     * Returns if given data contains any links or not.
+     *
+     * @return
+     */
     public boolean hasLinks() {
         return inputHasLinks;
     }
