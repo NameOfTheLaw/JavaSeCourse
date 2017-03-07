@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Classic logger without log types.
  *
- * Created by andrey on 25.02.2017.
+ * All log messages could not contain {@link #messagesSeparator}.
  */
 public class CrazyLogger {
     private StringBuilder logBuilder = new StringBuilder();
@@ -20,8 +20,9 @@ public class CrazyLogger {
      * Adds message to the log.
      *
      * @param message
+     * @throws IllegalArgumentException if message contains {@link #messagesSeparator}.
      */
-    public void log(String  message) {
+    public void log(String  message) throws IllegalArgumentException {
         Objects.requireNonNull(message);
 
         if (separatorIn(message)) {
@@ -46,7 +47,7 @@ public class CrazyLogger {
     }
 
     /**
-     * Returns the first log record where string argument is substring of the log message.
+     * Returns the first log record where given string is a substring of the log message.
      *
      * @param stringToFind
      * @return
@@ -64,7 +65,7 @@ public class CrazyLogger {
     }
 
     /**
-     * Returns the last log record where string argument is substring of the log message.
+     * Returns the last log record where given string is a substring of the log message.
      *
      * @param stringToFind
      * @return
@@ -82,7 +83,7 @@ public class CrazyLogger {
     }
 
     /**
-     * Returns all of the log records where string argument is substring of the log messages.
+     * Returns all of the log records where given string is a substring of the log messages.
      *
      * @param stringToFind
      * @return
@@ -105,6 +106,12 @@ public class CrazyLogger {
         return resultBuilder.toString();
     }
 
+    /**
+     * Prints the first log record where given string is a substring of the log message.
+     *
+     * @param stringToFind
+     * @return if logger have find record with the given string or not.
+     */
     public boolean printFirstIfExists(String stringToFind) {
         Objects.requireNonNull(stringToFind);
 
@@ -118,6 +125,12 @@ public class CrazyLogger {
         }
     }
 
+    /**
+     * Prints the last log record where given string is a substring of the log message.
+     *
+     * @param stringToFind
+     * @return if logger have find record with the given string or not.
+     */
     public boolean printLastIfExists(String stringToFind) {
         Objects.requireNonNull(stringToFind);
 
@@ -131,6 +144,13 @@ public class CrazyLogger {
         }
     }
 
+
+    /**
+     * Prints all log records where given string is a substring of the log message.
+     *
+     * @param stringToFind
+     * @return if logger have find any records with the given string or not.
+     */
     public boolean printAllIfExists(String stringToFind) {
         Objects.requireNonNull(stringToFind);
 
