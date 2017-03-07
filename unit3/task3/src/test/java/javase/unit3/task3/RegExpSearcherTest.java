@@ -8,9 +8,6 @@ import java.nio.charset.Charset;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by andrey on 26.02.2017.
- */
 public class RegExpSearcherTest {
 
     @Test(expected = NullPointerException.class)
@@ -62,17 +59,17 @@ public class RegExpSearcherTest {
 
     @Test
     public void testIsLinksSequential() throws IOException {
-        RegExpSearcher searcher1 = RegExpSearcher.from("(Рис.1) (Рис.2) (Рис.2) (Рис.3)");
+        RegExpSearcher searcher1 = RegExpSearcher.from("А (Рис.1) (Рис.2) (Рис.2) (Рис.3).");
         assertTrue(searcher1.isLinksSequential());
-        RegExpSearcher searcher2 = RegExpSearcher.from("(Рис.1) (Рис.3) (Рис.2) (Рис.2)");
+        RegExpSearcher searcher2 = RegExpSearcher.from("А (Рис.1) (Рис.3) (Рис.2) (Рис.2).");
         assertFalse(searcher2.isLinksSequential());
     }
 
     @Test
     public void testHasLinks() throws IOException {
-        RegExpSearcher searcher1 = RegExpSearcher.from("(Рис.1) (Рис.2) (Рис.2) (Рис.3)");
+        RegExpSearcher searcher1 = RegExpSearcher.from("А (Рис.1) (Рис.2) (Рис.2) (Рис.3).");
         assertTrue(searcher1.hasLinks());
-        RegExpSearcher searcher2 = RegExpSearcher.from("аааа. бббб. ввввв. гггг.");
+        RegExpSearcher searcher2 = RegExpSearcher.from("Аааа. Бббб. Ввввв. Гггг.");
         assertFalse(searcher2.hasLinks());
     }
 
@@ -90,8 +87,8 @@ public class RegExpSearcherTest {
 
     @Test
     public void testGetSentencesWithLinks() throws IOException {
-        RegExpSearcher searcher = RegExpSearcher.from("aaaaa (Рис.1) аааа. бббб(Рис.2). ввв ввввв. (Рис.3) гггг (Рис.4).");
-        assertArrayEquals(new String[] {"aaaaa (Рис.1) аааа.", " бббб(Рис.2).", " (Рис.3) гггг (Рис.4)."}, searcher.getSentencesWithLinks().toArray());
+        RegExpSearcher searcher = RegExpSearcher.from("Аaaaa (Рис.1) аааа. Бббб(Рис.2). Ввв ввввв. Г (Рис.3) гггг (Рис.4).");
+        assertArrayEquals(new String[] {"Аaaaa (Рис.1) аааа.", "Бббб(Рис.2).", "Г (Рис.3) гггг (Рис.4)."}, searcher.getSentencesWithLinks().toArray());
     }
 
 }

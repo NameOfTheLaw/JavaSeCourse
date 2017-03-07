@@ -8,14 +8,11 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by andrey on 26.02.2017.
- */
 public class RegExpSearcher {
     public static final Pattern LINK_PATTERN = Pattern.compile("[Рр]ис(\\.\\s?|ун(ка|ке|ок)\\s)(\\d+)");
     public static final int LINK_GROUP_IN_PATTERN = 3;
-    public static final Pattern SENTENCE_PATTERN = Pattern.compile("([\\.!?]|^)((([Рр]ис\\.\\s?(\\d+))|[^\\.!?])+[\\.!?])");
-    public static final int SENTENCE_GROUP_IN_PATTERN = 2;
+    //regexp for sentences was inspired by muh3gpab's pattern in the slack chat.
+    public static final Pattern SENTENCE_PATTERN = Pattern.compile("[А-Я0-9].*?([.]{3}|(?<![Рр]ис)[.]|[?!])");
 
     private BufferedReader reader;
     private boolean linksSequential;
@@ -24,7 +21,7 @@ public class RegExpSearcher {
 
     public static void main(String[] args) {
         try {
-            RegExpSearcher searcher = RegExpSearcher.from(new File("articl2e.html"), Charset.forName("windows-1251"));
+            RegExpSearcher searcher = RegExpSearcher.from(new File("article.html"), Charset.forName("windows-1251"));
 
             StringBuilder stringBuilder = new StringBuilder("Links in text is ");
 
@@ -102,26 +99,29 @@ public class RegExpSearcher {
         String line;
 
         while ((line = reader.readLine()) != null) {
-            Matcher linkMather = LINK_PATTERN.matcher(line);
+            Matcher sentenceMather = SENTENCE_PATTERN.matcher(line);
 
-            int lastSentenceIndex = 0;
+            while (sentenceMather.find()) {
+                String sentence = sentenceMather.group();
 
-            while (linkMather.find()) {
-                int linkNumber = Integer.valueOf(linkMather.group(LINK_GROUP_IN_PATTERN));
+                Matcher linkMather = LINK_PATTERN.matcher(sentence);
 
-                if (linkNumber > highestLinkNumber) {
-                    highestLinkNumber = linkNumber;
-                } else if (linkNumber < highestLinkNumber) {
-                    linksSequential = false;
+                boolean sentenceHasAnyLinks = false;
+
+                while (linkMather.find()) {
+                    int linkNumber = Integer.valueOf(linkMather.group(LINK_GROUP_IN_PATTERN));
+
+                    if (linkNumber > highestLinkNumber) {
+                        highestLinkNumber = linkNumber;
+                    } else if (linkNumber < highestLinkNumber) {
+                        linksSequential = false;
+                    }
+
+                    sentenceHasAnyLinks = true;
                 }
 
-                Matcher sentenceMather = SENTENCE_PATTERN.matcher(line);
-
-                if (sentenceMather.find(lastSentenceIndex)) {
-                    if (LINK_PATTERN.matcher(sentenceMather.group()).find()) {
-                        sentencesWithLinks.add(sentenceMather.group(SENTENCE_GROUP_IN_PATTERN));
-                    }
-                    lastSentenceIndex = sentenceMather.end() - 1;
+                if (sentenceHasAnyLinks) {
+                    sentencesWithLinks.add(sentence);
                 }
             }
         }
