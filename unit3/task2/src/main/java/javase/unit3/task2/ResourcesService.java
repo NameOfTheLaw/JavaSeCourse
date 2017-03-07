@@ -6,7 +6,10 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ResourcesContainer {
+/**
+ * Service for handling question and answers.
+ */
+public class ResourcesService {
 
     private final static String questionInListFormat = "%d) %s";
 
@@ -14,25 +17,54 @@ public class ResourcesContainer {
     private List<QuestionAndAnswer> questionAndAnswers;
     private Charset outputCharset;
 
-    public ResourcesContainer(ResourceBundle resourceBundle, Charset outputCharset) {
+    /**
+     * Constructor.
+     *
+     * @param resourceBundle contains questions, answers and other info messages.
+     * @param outputCharset charset for output objects (strings).
+     */
+    public ResourcesService(ResourceBundle resourceBundle, Charset outputCharset) {
         this.resourceBundle = resourceBundle;
         this.outputCharset = outputCharset;
         questionAndAnswers = loadQuestionsFrom(resourceBundle);
     }
 
-    public ResourcesContainer(ResourceBundle resourceBundle) {
+    /**
+     * Constructor.
+     *
+     * @param resourceBundle contains questions, answers and other info messages.
+     */
+    public ResourcesService(ResourceBundle resourceBundle) {
         this(resourceBundle, Charset.defaultCharset());
     }
 
-    public ResourcesContainer(String resourceBundleUrl, Locale locale) {
-        this(ResourceBundle.getBundle(resourceBundleUrl, locale), Charset.defaultCharset());
+    /**
+     * Constructor.
+     *
+     * @param resourceBundlePath path for resourceBundle.
+     * @param locale for strings in bundle.
+     */
+    public ResourcesService(String resourceBundlePath, Locale locale) {
+        this(ResourceBundle.getBundle(resourceBundlePath, locale), Charset.defaultCharset());
     }
 
-    public ResourcesContainer(String resourceBundleUrl, Locale locale, Charset outputCharset) {
-        this(ResourceBundle.getBundle(resourceBundleUrl, locale), outputCharset);
+    /**
+     * Constructor.
+     *
+     * @param resourceBundlePath path for resourceBundle.
+     * @param locale for strings in bundle.
+     * @param outputCharset charset for output objects (strings).
+     */
+    public ResourcesService(String resourceBundlePath, Locale locale, Charset outputCharset) {
+        this(ResourceBundle.getBundle(resourceBundlePath, locale), outputCharset);
     }
 
-    public void printAllQuestions(PrintStream printStream) throws UnsupportedEncodingException {
+    /**
+     * Prints all questions from bundle into given PrintStream.
+     *
+     * @param printStream for print into.
+     */
+    public void printAllQuestions(PrintStream printStream) {
         printStream.println(getStringWithEncoding("questions.intro"));
         for (int i = 0; i < questionAndAnswers.size(); i++) {
             printStream.println(String.format(
@@ -43,10 +75,19 @@ public class ResourcesContainer {
         }
     }
 
-    public void printAllQuestions() throws UnsupportedEncodingException {
+    /**
+     * Prints all questions into <code>System.out</code>.
+     */
+    public void printAllQuestions() {
         printAllQuestions(System.out);
     }
 
+    /**
+     * Returns question by index.
+     *
+     * @param index
+     * @return
+     */
     public String getQuestion(int index) {
         checkIndexToBeLegal(index);
 
@@ -54,6 +95,12 @@ public class ResourcesContainer {
                 questionAndAnswers.get(index - 1).getQuestionKey());
     }
 
+    /**
+     * Returns answer by index.
+     *
+     * @param index
+     * @return
+     */
     public String getAnswer(int index) {
         checkIndexToBeLegal(index);
 
@@ -61,12 +108,23 @@ public class ResourcesContainer {
                 questionAndAnswers.get(index - 1).getAnswerKey());
     }
 
+    /**
+     * Returns list of all questions.
+     *
+     * @return
+     */
     public List<String> getAllQuestions() {
         return questionAndAnswers.stream()
                 .map((x) -> getStringWithEncoding(x.getQuestionKey()))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns a string for given key.
+     *
+     * @param key
+     * @return
+     */
     public String getString(String key) {
         return getStringWithEncoding(key);
     }

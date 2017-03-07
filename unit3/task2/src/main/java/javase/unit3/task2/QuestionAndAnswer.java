@@ -3,6 +3,7 @@ package javase.unit3.task2;
 import java.util.Objects;
 
 public class QuestionAndAnswer {
+
     public final static String QUESTION_KEY_FORMAT = "question.%d";
     public final static String ANSWER_KEY_FORMAT = "question.%d.answer";
 

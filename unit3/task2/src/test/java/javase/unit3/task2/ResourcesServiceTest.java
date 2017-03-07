@@ -10,83 +10,83 @@ import java.util.*;
 import static javase.unit3.task2.QuestionAndAnswer.*;
 import static org.junit.Assert.*;
 
-public class ResourcesContainerTest {
+public class ResourcesServiceTest {
 
-    ResourcesContainer resourcesContainer;
+    ResourcesService resourcesService;
 
     @Before
     public void before() {
-        resourcesContainer = new ResourcesContainer(
+        resourcesService = new ResourcesService(
                 new ResourceBundleTesting(Locale.forLanguageTag("en")));
     }
 
     @Test
     public void testCreatingFromResourceBundle() {
-        ResourcesContainer resourcesContainer = new ResourcesContainer(
+        ResourcesService resourcesService = new ResourcesService(
                 new ResourceBundleTesting(Locale.ENGLISH));
 
-        assertEquals("a1", resourcesContainer.getAnswer(1));
-        assertEquals("q1", resourcesContainer.getQuestion(1));
+        assertEquals("a1", resourcesService.getAnswer(1));
+        assertEquals("q1", resourcesService.getQuestion(1));
 
-        resourcesContainer = new ResourcesContainer(
+        resourcesService = new ResourcesService(
                 new ResourceBundleTesting(Locale.forLanguageTag("ru")));
 
-        assertEquals("отв1", resourcesContainer.getAnswer(1));
-        assertEquals("воп1", resourcesContainer.getQuestion(1));
+        assertEquals("отв1", resourcesService.getAnswer(1));
+        assertEquals("воп1", resourcesService.getQuestion(1));
     }
 
     @Test
     public void testGetQuestion() {
-        assertEquals("q1", resourcesContainer.getQuestion(1));
-        assertEquals("q2", resourcesContainer.getQuestion(2));
-        assertEquals("q3", resourcesContainer.getQuestion(3));
+        assertEquals("q1", resourcesService.getQuestion(1));
+        assertEquals("q2", resourcesService.getQuestion(2));
+        assertEquals("q3", resourcesService.getQuestion(3));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetQuestionOutOfBoundLowBorder() {
-        resourcesContainer.getQuestion(0);
+        resourcesService.getQuestion(0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetQuestionOutOfBoundHighBorder() {
-        resourcesContainer.getQuestion(4);
+        resourcesService.getQuestion(4);
     }
 
     @Test
     public void testGetAnswer() {
-        assertEquals("a1", resourcesContainer.getAnswer(1));
-        assertEquals("a2", resourcesContainer.getAnswer(2));
-        assertEquals("a3", resourcesContainer.getAnswer(3));
+        assertEquals("a1", resourcesService.getAnswer(1));
+        assertEquals("a2", resourcesService.getAnswer(2));
+        assertEquals("a3", resourcesService.getAnswer(3));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetAnswerOutOfBoundLowBorder() {
-        resourcesContainer.getAnswer(0);
+        resourcesService.getAnswer(0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetAnswerOutOfBoundHighBorder() {
-        resourcesContainer.getAnswer(4);
+        resourcesService.getAnswer(4);
     }
 
     @Test
     public void testGetAllQuestions() {
-        List<String> allQuestions = resourcesContainer.getAllQuestions();
+        List<String> allQuestions = resourcesService.getAllQuestions();
 
         assertArrayEquals(new String[] {"q1", "q2", "q3"}, allQuestions.stream().toArray());
     }
 
     @Test
     public void testGetAllQuestionsIfWhereIsNoQuestions() {
-        ResourcesContainer resourcesContainer = new ResourcesContainer(new ResourceBundleTesting(Locale.FRANCE));
-        List<String> allQuestions = resourcesContainer.getAllQuestions();
+        ResourcesService resourcesService = new ResourcesService(new ResourceBundleTesting(Locale.FRANCE));
+        List<String> allQuestions = resourcesService.getAllQuestions();
 
         assertArrayEquals(new String[] {}, allQuestions.stream().toArray());
     }
 
     @Test(timeout = 2000L)
     public void testPrintAllQuestions() throws IOException, NoSuchFieldException, IllegalAccessException {
-        ResourcesContainer resourcesContainer = new ResourcesContainer(new ResourceBundleTesting(Locale.ENGLISH));
+        ResourcesService resourcesService = new ResourcesService(new ResourceBundleTesting(Locale.ENGLISH));
 
         PipedInputStream inputStream = new PipedInputStream();
 
@@ -95,14 +95,14 @@ public class ResourcesContainerTest {
         PipedOutputStream outputStream = new PipedOutputStream(inputStream);
         PrintStream printWriter = new PrintStream(outputStream);
 
-        resourcesContainer.printAllQuestions(printWriter);
+        resourcesService.printAllQuestions(printWriter);
 
         String[] expectedMessages = new String[] {"q1", "q2", "q3"};
         int i = 0;
 
         String outputMessage = bufferedReader.readLine(); //ignore first output
         while (bufferedReader.ready() && (outputMessage = bufferedReader.readLine()) != null) {
-            Field formatField = ResourcesContainer.class.getDeclaredField("questionInListFormat");
+            Field formatField = ResourcesService.class.getDeclaredField("questionInListFormat");
             formatField.setAccessible(true);
             String outputFormat = (String) formatField.get(null);
 
@@ -118,7 +118,7 @@ public class ResourcesContainerTest {
 
     @Test(timeout = 2000L)
     public void testPrintAllQuestionsIfWhereIsNoQuestions() throws IOException {
-        ResourcesContainer resourcesContainer = new ResourcesContainer(new ResourceBundleTesting(Locale.FRANCE));
+        ResourcesService resourcesService = new ResourcesService(new ResourceBundleTesting(Locale.FRANCE));
 
         PipedInputStream pipedInputStream = new PipedInputStream();
 
@@ -127,7 +127,7 @@ public class ResourcesContainerTest {
         PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream);
         PrintStream printWriter = new PrintStream(pipedOutputStream);
 
-        resourcesContainer.printAllQuestions(printWriter);
+        resourcesService.printAllQuestions(printWriter);
 
         String outputMessage = bufferedReader.readLine(); //ignore first output
         assertNull(bufferedReader.ready() ? bufferedReader.readLine() : null);
