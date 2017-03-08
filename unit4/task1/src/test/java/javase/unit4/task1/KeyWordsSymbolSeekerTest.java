@@ -1,25 +1,25 @@
 package javase.unit4.task1;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by andrey on 08.03.2017.
- */
 public class KeyWordsSymbolSeekerTest extends KeyWordsSeekerTest {
 
     @Override
-    public void setUp() {
+    public void setUp() throws IOException {
         super.setUp();
 
         outputFileName = "SymbolSeekerOutput.txt";
     }
 
     @Override
-    public void testGetAllKeyWordsIfWhereIsNoKeyWords() {
-        Set<String> keywords = new KeyWordsSymbolSeeker(emptyFileName);
+    public void testGetKeyWordsIfWhereIsNoKeyWords() throws IOException {
+        KeyWordsSeeker seeker = new KeyWordsSymbolSeeker(emptyFileName);
+        Set<String> keywords = seeker.getKeyWords();
 
         assertEquals(new HashSet<String>(), keywords);
     }

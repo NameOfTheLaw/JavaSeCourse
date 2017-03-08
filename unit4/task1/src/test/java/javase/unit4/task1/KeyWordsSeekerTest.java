@@ -21,7 +21,7 @@ public abstract class KeyWordsSeekerTest {
     KeyWordsSeeker seeker;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         expectedKeyWordsWithCount.put("package", 1);
         expectedKeyWordsWithCount.put("import", 1);
         expectedKeyWordsWithCount.put("public", 1);
@@ -36,14 +36,14 @@ public abstract class KeyWordsSeekerTest {
     }
 
     @Test
-    public void testGetAllKeyWords() {
+    public void testGetKeyWords() {
         Set<String> keywords = seeker.getKeyWords();
 
         assertEquals(expectedKeyWordsWithCount.keySet(), keywords);
     }
 
     @Test
-    public abstract void testGetAllKeyWordsIfWhereIsNoKeyWords();
+    public abstract void testGetKeyWordsIfWhereIsNoKeyWords() throws IOException;
 
     @Test
     public void testGetKeyWordsWithCount() {
@@ -60,13 +60,14 @@ public abstract class KeyWordsSeekerTest {
         seeker.printInto(outputFileName);
 
         file = new File(outputFileName);
-        BufferedReader br = new BufferedReader(new FileReader(file));
 
         Pattern pattern = Pattern.compile("\\w+ \\d+");
 
-        String line;
-        while ((line = br.readLine()) != null) {
-            assertTrue(pattern.matcher(line).find());
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                assertTrue(pattern.matcher(line).find());
+            }
         }
     }
 }
