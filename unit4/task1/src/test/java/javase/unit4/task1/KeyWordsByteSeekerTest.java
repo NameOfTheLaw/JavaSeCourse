@@ -16,6 +16,8 @@ public class KeyWordsByteSeekerTest extends KeyWordsSeekerTest {
     public void setUp() throws IOException {
         super.setUp();
 
+        seeker = new KeyWordsByteSeeker(testFileName);
+
         outputFileName = "ByteSeekerOutput.txt";
     }
 

@@ -17,7 +17,7 @@ public abstract class KeyWordsSeekerTest {
     String testFileName = "TestJavaCode.java";
     String emptyFileName = "TestEmptyFile.java";
     String outputFileName;
-    Map<String, Integer> expectedKeyWordsWithCount = new HashMap<>(); //TODO
+    Map<String, Integer> expectedKeyWordsWithCount = new HashMap<>();
     KeyWordsSeeker seeker;
 
     @Before
@@ -31,8 +31,6 @@ public abstract class KeyWordsSeekerTest {
         expectedKeyWordsWithCount.put("super", 1);
         expectedKeyWordsWithCount.put("return", 1);
         expectedKeyWordsWithCount.put("this", 1);
-
-        seeker = new KeyWordsByteSeeker(testFileName);
     }
 
     @Test

@@ -13,6 +13,8 @@ public class KeyWordsSymbolSeekerTest extends KeyWordsSeekerTest {
     public void setUp() throws IOException {
         super.setUp();
 
+        seeker = new KeyWordsSymbolSeeker(testFileName);
+
         outputFileName = "SymbolSeekerOutput.txt";
     }
 
