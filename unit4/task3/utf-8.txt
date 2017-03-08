@@ -1,0 +1,2 @@
+Text was written in UTF-8 file.
+It should be translate into UTF-16 file.
