@@ -5,6 +5,9 @@ import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 
 /**
+ * Translator for file from any charset to UTF-16.
+ *
+ * Default charset for input file is {@link #defaultInputCharset}.
  * Created by andrey on 09.03.2017.
  */
 public class UTF16Translator {
@@ -14,6 +17,13 @@ public class UTF16Translator {
     private Charset inputCharset;
     private File inputFile;
 
+    /**
+     * Constructor.
+     *
+     * @param inputFileName name of the input file to translate from.
+     * @param inputFileCharset charset for input file.
+     * @throws FileNotFoundException
+     */
     public UTF16Translator(String inputFileName, Charset inputFileCharset) throws FileNotFoundException {
         this.inputFile = new File(inputFileName);
         checkInputFileExistsOrDie("Input file \"%s\" isn't exist.");
@@ -21,10 +31,24 @@ public class UTF16Translator {
         this.inputCharset = inputFileCharset;
     }
 
+    /**
+     * Constructor.
+     *
+     * Uses {@link #defaultInputCharset}.
+     * @param inputFileName name of the input file to translate from.
+     * @throws FileNotFoundException
+     */
     public UTF16Translator(String inputFileName) throws FileNotFoundException {
         this(inputFileName, defaultInputCharset);
     }
 
+    /**
+     * Translate data from input file to output file.
+     *
+     * Encoding of the output file will be UTF-16.
+     * @param outputFileName name of the output file to translate to.
+     * @throws IOException if input or output files are somehow broken.
+     */
     public void translateTo(String outputFileName) throws IOException {
         checkInputFileExistsOrDie("Input file \"%s\" was removed.");
 
