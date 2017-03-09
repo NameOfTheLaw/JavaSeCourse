@@ -9,10 +9,23 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Implementation of the {@link KeyWordsSeeker}.
+ *
+ * Uses only byte io streams ({@link Reader}/{@link Writer})
+ * for working with files.
+ */
 public class KeyWordsByteSeeker implements KeyWordsSeeker {
 
     private Map<String, Integer> keyWords;
 
+    /**
+     * Constructor.
+     *
+     * @param fileName name of the file to find key words in.
+     * @param charset charset of the input file.
+     * @throws IOException if input file are somehow broken.
+     */
     public KeyWordsByteSeeker(String fileName, Charset charset) throws IOException {
         byte[] byteArray;
 
@@ -24,6 +37,12 @@ public class KeyWordsByteSeeker implements KeyWordsSeeker {
         keyWords = findKeyWords(new String(byteArray, charset));
     }
 
+    /**
+     * Constructor.
+     *
+     * @param fileName name of the file to find key words in.
+     * @throws IOException if input file are somehow broken.
+     */
     public KeyWordsByteSeeker (String fileName) throws IOException {
         this(fileName, Charset.defaultCharset());
     }
@@ -47,10 +66,5 @@ public class KeyWordsByteSeeker implements KeyWordsSeeker {
                 outputStream.write(keyWordRecord.getBytes());
             }
         }
-    }
-
-    @Override
-    public Map<String, Integer> findKeyWords(String text) {
-        return findKeyWords(text, new KeyWordsService());
     }
 }

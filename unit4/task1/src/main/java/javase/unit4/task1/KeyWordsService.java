@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Class for maintaining with Java key words.
+ *
  * Created by andrey on 08.03.2017.
  */
 public class KeyWordsService {
@@ -25,9 +27,15 @@ public class KeyWordsService {
     };
 
     public KeyWordsService() {
-        keyWordsSet = new HashSet<String>(Arrays.asList(keyWordsArray));
+        keyWordsSet = new HashSet<>(Arrays.asList(keyWordsArray));
     }
 
+    /**
+     * Checks if the given word is key word in Java or not.
+     *
+     * @param word
+     * @return
+     */
     public boolean isKeyWord(String word) {
         Objects.requireNonNull(word);
 
