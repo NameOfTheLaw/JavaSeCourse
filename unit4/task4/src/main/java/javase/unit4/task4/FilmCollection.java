@@ -23,9 +23,7 @@ public class FilmCollection implements Serializable {
 
     public void save(String fileName) throws IOException {
         File creatingFile = new File(fileName);
-        if (creatingFile.exists()) {
-            throw new FileAlreadyExistsException(fileName);
-        }
+        creatingFile.delete();
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(creatingFile))) {
             outputStream.writeObject(this);
@@ -35,8 +33,9 @@ public class FilmCollection implements Serializable {
 
     public Set<Actor> getActors() {
         Set<Actor> actors = new HashSet<>();
-        films.stream()
-                .forEach((x) -> actors.addAll(x.getActors()));
+
+        films.forEach((film) -> actors.addAll(film.getActors()));
+
         return actors;
     }
 

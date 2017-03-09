@@ -3,6 +3,12 @@ package javase.unit4.task4;
 import java.io.Serializable;
 
 public class Actor implements Serializable {
+    @Override
+    public String toString() {
+        return "Actor{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 
     private final String name;
 

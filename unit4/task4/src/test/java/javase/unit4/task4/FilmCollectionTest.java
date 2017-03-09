@@ -48,14 +48,6 @@ public class FilmCollectionTest {
         assertEquals(expectedFilmCollectionWithTestData, filmCollection);
     }
 
-    @Test(expected = FileAlreadyExistsException.class)
-    public void testSaveIfFileIsAlreadyExists() throws IOException {
-        createAndSaveFilmCollectionWithTestData();
-
-        FilmCollection filmCollection = formFilmCollectionWithTestData();
-        filmCollection.save(fileName);
-    }
-
     @Test(expected = NullPointerException.class)
     public void testSaveWithNull() throws IOException {
         new FilmCollection().save(null);
@@ -119,12 +111,10 @@ public class FilmCollectionTest {
         FilmCollection filmCollection = new FilmCollection();
         assertEquals(0, filmCollection.size());
 
-        Film film = new Film("film", new Actor("actor"));
-
-        filmCollection.add(film);
+        filmCollection.add(new Film("film", new Actor("actor")));
         assertEquals(1, filmCollection.size());
 
-        filmCollection.add(film);
+        filmCollection.add(new Film("film", new Actor("actor")));
         assertEquals(1, filmCollection.size());
     }
 

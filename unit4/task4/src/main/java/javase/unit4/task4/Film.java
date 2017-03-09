@@ -44,4 +44,12 @@ public class Film implements Serializable {
         result = 31 * result + (actors != null ? actors.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Film{" +
+                "name='" + name + '\'' +
+                ", actors=" + actors +
+                '}';
+    }
 }
