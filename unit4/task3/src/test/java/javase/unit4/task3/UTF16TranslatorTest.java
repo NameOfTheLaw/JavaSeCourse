@@ -7,17 +7,17 @@ import java.nio.charset.Charset;
 
 import static org.junit.Assert.*;
 
-public class UTFTranslatorTest {
+public class UTF16TranslatorTest {
 
     @Test
     public void testTranslate() throws IOException {
-        UTFTranslator translator = new UTFTranslator("utf-8.txt", "utf-16.txt");
+        UTF16Translator translator = new UTF16Translator("utf-8.txt");
 
         File inputFile = new File("utf-8.txt");
         File outputFile = new File("utf-16.txt");
         outputFile.delete();
 
-        translator.translate();
+        translator.translateTo("utf-16.txt");
 
         assertFileEquals(inputFile, outputFile);
 
@@ -25,29 +25,27 @@ public class UTFTranslatorTest {
 
     @Test
     public void testTranslateEmptyFile() throws IOException {
-        UTFTranslator translator = new UTFTranslator("empty_utf-8.txt", "empty_utf-16.txt");
+        UTF16Translator translator = new UTF16Translator("empty_utf-8.txt");
 
         File inputFile = new File("empty_utf-8.txt");
         File outputFile = new File("empty_utf-16.txt");
         outputFile.delete();
 
-        translator.translate();
+        translator.translateTo("empty_utf-16.txt");
 
         assertFileEquals(inputFile, outputFile);
 
     }
 
     @Test
-    public void testTranslateWithCharsets() throws IOException {
-        UTFTranslator translator = new UTFTranslator(
-                "utf-8.txt", Charset.forName("utf-8"),
-                "utf-16.txt", Charset.forName("utf-16"));
+    public void testTranslateWithCharset() throws IOException {
+        UTF16Translator translator = new UTF16Translator("utf-8.txt", Charset.forName("utf-8"));
 
         File inputFile = new File("utf-8.txt");
         File outputFile = new File("utf-16.txt");
         outputFile.delete();
 
-        translator.translate();
+        translator.translateTo("utf-16.txt");
 
         assertFileEquals(inputFile, outputFile);
 
