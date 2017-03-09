@@ -2,7 +2,6 @@ package javase.unit4.task4;
 
 import org.junit.Test;
 
-import javax.naming.NoPermissionException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
