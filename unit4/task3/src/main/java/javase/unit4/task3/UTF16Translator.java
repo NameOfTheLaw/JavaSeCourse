@@ -16,9 +16,7 @@ public class UTF16Translator {
 
     public UTF16Translator(String inputFileName, Charset inputFileCharset) throws FileNotFoundException {
         this.inputFile = new File(inputFileName);
-        if (!inputFile.exists()) {
-            throw new FileNotFoundException(String.format("Input file \"%s\" isn't exist.", inputFileName));
-        }
+        checkInputFileExistsOrDie("Input file \"%s\" isn't exist.");
 
         this.inputCharset = inputFileCharset;
     }
@@ -28,9 +26,7 @@ public class UTF16Translator {
     }
 
     public void translateTo(String outputFileName) throws IOException {
-        if (!inputFile.exists()) {
-            throw new FileNotFoundException(String.format("Input file \"%s\" was removed.", inputFile.getName()));
-        }
+        checkInputFileExistsOrDie("Input file \"%s\" was removed.");
 
         File outputFile = new File(outputFileName);
         if (!outputFile.createNewFile()) {
@@ -44,14 +40,19 @@ public class UTF16Translator {
 
             String inputLine;
             while ((inputLine = reader.readLine()) != null) {
-                String outputLine = new String(inputLine.getBytes(outputCharset), outputCharset);
                 if (reader.ready()) {
-                    writer.write(String.format("%s%n", outputLine));
+                    writer.write(String.format("%s%n", inputLine));
                 } else {
-                    writer.write(String.format("%s", outputLine));
+                    writer.write(String.format("%s", inputLine));
                 }
 
             }
+        }
+    }
+
+    private void checkInputFileExistsOrDie(String messageFormat) throws FileNotFoundException {
+        if (!inputFile.exists()) {
+            throw new FileNotFoundException(String.format(messageFormat, inputFile.getName()));
         }
     }
 }
