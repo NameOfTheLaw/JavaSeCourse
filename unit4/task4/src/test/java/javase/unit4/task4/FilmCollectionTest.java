@@ -4,7 +4,9 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -14,28 +16,28 @@ public class FilmCollectionTest {
     FilmCollection expectedFilmCollectionWithTestData = formFilmCollectionWithTestData();
 
     @Test
-    public void testLoad() {
+    public void testLoad() throws IOException, ClassNotFoundException {
         createAndSaveFilmCollectionWithTestData();
 
-        filmCollection = FilmCollection.load(fileName);
+        FilmCollection filmCollection = FilmCollection.load(fileName);
 
         assertEquals(expectedFilmCollectionWithTestData, filmCollection);
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void testLoadIfWhereIsNoFile() {
+    public void testLoadIfWhereIsNoFile() throws IOException, ClassNotFoundException {
         deleteFilmCollectionWithTestData();
 
         FilmCollection.load(fileName);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testLoadWithNull() {
+    public void testLoadWithNull() throws IOException, ClassNotFoundException {
         new FilmCollection().load(null);
     }
 
     @Test
-    public void testSave() {
+    public void testSave() throws IOException, ClassNotFoundException {
         deleteFilmCollectionWithTestData();
 
         FilmCollection filmCollection = formFilmCollectionWithTestData();
@@ -47,7 +49,7 @@ public class FilmCollectionTest {
     }
 
     @Test(expected = FileAlreadyExistsException.class)
-    public void testSaveIfFileIsAlreadyExists() {
+    public void testSaveIfFileIsAlreadyExists() throws IOException {
         createAndSaveFilmCollectionWithTestData();
 
         FilmCollection filmCollection = formFilmCollectionWithTestData();
@@ -55,7 +57,7 @@ public class FilmCollectionTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testSaveWithNull() {
+    public void testSaveWithNull() throws IOException {
         new FilmCollection().save(null);
     }
 
@@ -74,7 +76,25 @@ public class FilmCollectionTest {
 
         Set<Actor> actors = filmCollection.getActors();
 
-        assertEquals(actors.isEmpty());
+        assertTrue(actors.isEmpty());
+    }
+
+    @Test
+    public void testGetFilms() {
+        FilmCollection filmCollection = formFilmCollectionWithTestData();
+
+        Set<Film> actors = filmCollection.getFilms();
+
+        assertEquals(5, actors.size());
+    }
+
+    @Test
+    public void testGetFilmsIfWhereIsNoFilms() {
+        FilmCollection filmCollection = new FilmCollection();
+
+        Set<Film> actors = filmCollection.getFilms();
+
+        assertTrue(actors.isEmpty());
     }
 
     @Test
@@ -156,7 +176,7 @@ public class FilmCollectionTest {
         return filmCollection;
     }
 
-    private void createAndSaveFilmCollectionWithTestData() {
+    private void createAndSaveFilmCollectionWithTestData() throws IOException {
         deleteFilmCollectionWithTestData();
 
         FilmCollection filmCollection = formFilmCollectionWithTestData();
