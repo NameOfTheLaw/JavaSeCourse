@@ -15,16 +15,22 @@ Links for this repository.
  
 ## [Unit 02](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2)
  
-- [1](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task1/src/main/java/javase/unit2/t1)
-- [2](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task2/src/main/java/javase/unit2/t2)
-- [3](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task3/src/main/java/javase/unit2/t3)
-- [4](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task4/src/main/java/javase/unit2/t4)
-- [5](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task5/src/main/java/javase/unit2/t5)
-- [6](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task6/src/main/java/javase/unit2/t6)
-- [7](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task7/src/main/java/javase/unit2/t7)
+- [1](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task1/src/)
+- [2](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task2/src/)
+- [3](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task3/src/)
+- [4](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task4/src/)
+- [5](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task5/src/)
+- [6](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task6/src/)
+- [7](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit2/task7/src/)
 
 ## [Unit 03](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3)
  
-- [1](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task1/src/main/java/javase/unit3/task1)
-- [2](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task2/src/main/java/javase/unit3/task2)
-- [3](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task3/src/main/java/javase/unit3/task3)
+- [1](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task1/src/)
+- [2](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task2/src/)
+- [3](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task3/src/)
+
+## [Unit 04](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4)
+ 
+- [1, 2. KeyWordsByteSeeker and KeyWordsSymbolSeeker](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4/task1/src/)
+- [3. UTF16Translator](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4/task3/src/)
+- [4. FilmCollection](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4/task4/src/)
