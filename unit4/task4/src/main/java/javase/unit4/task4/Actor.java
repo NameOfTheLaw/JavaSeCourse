@@ -2,20 +2,26 @@ package javase.unit4.task4;
 
 import java.io.Serializable;
 
+/**
+ * Film actor.
+ */
 public class Actor implements Serializable {
-    @Override
-    public String toString() {
-        return "Actor{" +
-                "name='" + name + '\'' +
-                '}';
-    }
-
     private final String name;
 
+    /**
+     * Constructor.
+     *
+     * @param name name of the actor.
+     */
     public Actor(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns actor's name.
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
@@ -33,5 +39,12 @@ public class Actor implements Serializable {
     @Override
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Actor{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

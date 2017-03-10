@@ -6,11 +6,20 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Film with a list of the main actors.
+ */
 public class Film implements Serializable {
 
     private String name;
     private Set<Actor> actors;
 
+    /**
+     * Constructor.
+     *
+     * @param name name of the film.
+     * @param actors list of the main actors of the film.
+     */
     public Film(String name, Actor... actors) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(actors);
@@ -19,10 +28,20 @@ public class Film implements Serializable {
         this.actors = new HashSet<>(Arrays.asList(actors));
     }
 
+    /**
+     * Returns name of the film.
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns a set of the main actors of the film.
+     *
+     * @return
+     */
     public Set<Actor> getActors() {
         return new HashSet<>(actors);
     }
