@@ -6,9 +6,9 @@ import java.util.Objects;
 
 public class FileSystemService {
 
-    public final static String SEPARATOR = File.separator;
+    public static final String SEPARATOR = File.separator;
 
-    public void create(File file) throws IOException {
+    public static void create(File file) throws IOException {
         Objects.requireNonNull(file);
 
         if (file.exists()) {
@@ -18,7 +18,7 @@ public class FileSystemService {
         }
     }
 
-    public void delete(File file) throws FileNotFoundException {
+    public static void delete(File file) throws FileNotFoundException {
         Objects.requireNonNull(file);
 
         if (file.exists()) {
@@ -28,7 +28,7 @@ public class FileSystemService {
         }
     }
 
-    public void echo(File file, String content) throws IOException {
+    public static void echo(File file, String content) throws IOException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(content);
 

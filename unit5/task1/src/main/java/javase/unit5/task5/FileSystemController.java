@@ -12,30 +12,28 @@ public class FileSystemController {
     private File currentDirectory;
     private static final String pathFormat = "%s" + FileSystemService.SEPARATOR + "%s";
 
-    public FileSystemController(String systemPath) throws DirectoryNotFoundException, NotDirectoryException {
-        Objects.requireNonNull(systemPath);
+    public FileSystemController(String folderPath) throws DirectoryNotFoundException, NotDirectoryException {
+        Objects.requireNonNull(folderPath);
 
-        File destination = new File(systemPath);
+        File folder = new File(folderPath);
 
-        checkDirectoryOrDie(destination);
+        checkDirectoryOrDie(folder);
+
+        currentDirectory = folder;
     }
 
     public void move(String folderPath) throws NotDirectoryException, DirectoryNotFoundException {
         Objects.requireNonNull(folderPath);
 
-        File destination = new File(
-                String.format(pathFormat,
-                        currentDirectory.getAbsolutePath(),
-                        folderPath
-                )
-        );
+        File destination = getDestination(folderPath);
 
         checkDirectoryOrDie(destination);
+
+        currentDirectory = destination;
     }
 
     public List<File> list() {
-        return Arrays.stream(currentDirectory.list())
-                .map(File::new)
+        return Arrays.stream(currentDirectory.listFiles())
                 .collect(Collectors.toList());
     }
 
@@ -45,13 +43,20 @@ public class FileSystemController {
 
     private void checkDirectoryOrDie(File file) throws NotDirectoryException, DirectoryNotFoundException {
         if (file.exists()) {
-            if (file.isDirectory()) {
-                currentDirectory = file;
-            } else {
+            if (!file.isDirectory()) {
                 throw new NotDirectoryException(file.getName());
             }
         } else {
             throw new DirectoryNotFoundException();
         }
+    }
+
+    private File getDestination(String filePath) {
+        return new File(
+                String.format(pathFormat,
+                        currentDirectory.getAbsolutePath(),
+                        filePath
+                )
+        );
     }
 }
