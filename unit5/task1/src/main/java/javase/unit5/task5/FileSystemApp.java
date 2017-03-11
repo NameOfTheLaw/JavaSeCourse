@@ -3,6 +3,8 @@ package javase.unit5.task5;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,19 @@ public class FileSystemApp {
     }
 
     private static boolean handleInput(String input) {
+
+        boolean isRunning = true;
+
+        try {
+            isRunning = handleCommand(input);
+        } catch (WrongArgumentsNumberException | EmptyArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return isRunning;
+    }
+
+    private static boolean handleCommand(String input) {
         String command = getCommandFromInput(input);
 
         switch (command) {
@@ -45,79 +60,60 @@ public class FileSystemApp {
                 break;
 
             case "cd": {
-                Matcher matcher = getMatcherOfCommandArguments(input, command);
 
-                if (matcher.find()) {
-                    try {
-                        controller.move(matcher.group(argumentPatternGroup));
-                    } catch (NotDirectoryException e) {
-                        System.out.printf("%s is not a directory.%n", e.getMessage());
-                    } catch (DirectoryNotFoundException e) {
-                        System.out.printf("Directory %s was not found.%n", e.getMessage());
-                    }
-                } else {
-                    throw new WrongArgumentsNumberException(1, 0);
+                String directoryPath = getFirstArgFromInput(input, command);
+
+                try {
+                    controller.move(directoryPath);
+                } catch (NotDirectoryException e) {
+                    System.out.printf("%s is not a directory.%n", e.getMessage());
+                } catch (DirectoryNotFoundException e) {
+                    System.out.printf("Directory %s was not found.%n", e.getMessage());
                 }
 
                 break;
             }
 
             case "touch": {
-                Matcher matcher = getMatcherOfCommandArguments(input, command);
 
-                if (matcher.find()) {
-                    try {
-                        controller.create(matcher.group(argumentPatternGroup));
-                    } catch (FileAlreadyExistsException e) {
-                        System.out.printf("File %s already exists.%n", e.getFile());
-                    } catch (IOException e) {
-                        System.out.printf("File cannot be created: %s%n", e.getMessage());
-                    }
-                } else {
-                    throw new WrongArgumentsNumberException(1, 0);
+                String filePathToCreate = getFirstArgFromInput(input, command);
+
+                try {
+                    controller.create(filePathToCreate);
+                } catch (FileAlreadyExistsException e) {
+                    System.out.printf("File %s already exists.%n", e.getFile());
+                } catch (IOException e) {
+                    System.out.printf("File cannot be created: %s%n", e.getMessage());
                 }
 
                 break;
             }
 
             case "del": {
-                Matcher matcher = getMatcherOfCommandArguments(input, command);
 
-                if (matcher.find()) {
-                    try {
-                        controller.delete(matcher.group(argumentPatternGroup));
-                    } catch (FileNotFoundException e) {
-                        System.out.printf("File was not found: %s.%n", e.getMessage());
-                    }
-                } else {
-                    throw new WrongArgumentsNumberException(1, 0);
+                String filePathToDelete = getFirstArgFromInput(input, command);
+
+                try {
+                    controller.delete(filePathToDelete);
+                } catch (FileNotFoundException e) {
+                    System.out.printf("File was not found: %s.%n", e.getMessage());
                 }
 
                 break;
             }
 
             case "echo": {
-                Matcher matcher = getMatcherOfCommandArguments(input, command);
 
-                if (matcher.find()) {
-                    String filePath = matcher.group(argumentPatternGroup);
+                List<String> args = getArgsFromInput(input, command, 2);
+                String filePath = args.get(0);
+                String message = args.get(1);
 
-                    String message;
-                    if (matcher.find()) {
-                        message = matcher.group(argumentPatternGroup);
-                    } else {
-                        throw new WrongArgumentsNumberException(2, 1);
-                    }
-
-                    try {
-                        controller.echo(filePath, message);
-                    } catch (FileNotFoundException e) {
-                        System.out.printf("File was not found: %s.%n", e.getMessage());
-                    } catch (IOException e) {
-                        System.out.printf("Cannot write in file: %s%n", e.getMessage());
-                    }
-                } else {
-                    throw new WrongArgumentsNumberException(2, 0);
+                try {
+                    controller.echo(filePath, message);
+                } catch (FileNotFoundException e) {
+                    System.out.printf("File was not found: %s.%n", e.getMessage());
+                } catch (IOException e) {
+                    System.out.printf("Cannot write in file: %s%n", e.getMessage());
                 }
 
                 break;
@@ -145,7 +141,7 @@ public class FileSystemApp {
                 "  del \"file name\"%n" +
                 "  echo \"file name\" \"message\"%n" +
                 "  help%n" +
-                "  exit%n%n");
+                "  exit%n");
     }
 
     private static String getCommandFromInput(String input) {
@@ -163,5 +159,30 @@ public class FileSystemApp {
         String arguments = userInput.substring(command.length());
 
         return argumentPattern.matcher(arguments);
+    }
+
+    private static List<String> getArgsFromInput(String input, String command, int expectedArgsNum) {
+        List<String> arguments = new ArrayList<>();
+
+        Matcher matcher = getMatcherOfCommandArguments(input, command);
+        while (matcher.find()) {
+            String argument = matcher.group(argumentPatternGroup).trim();
+
+            if (argument.isEmpty()) {
+                throw new EmptyArgumentException(arguments.size() + 1);
+            }
+
+            arguments.add(argument);
+        }
+
+        if (arguments.size() != expectedArgsNum) {
+            throw new WrongArgumentsNumberException(expectedArgsNum, arguments.size());
+        }
+
+        return arguments;
+    }
+
+    private static String getFirstArgFromInput(String input, String command) {
+        return getArgsFromInput(input, command, 1).get(0);
     }
 }
