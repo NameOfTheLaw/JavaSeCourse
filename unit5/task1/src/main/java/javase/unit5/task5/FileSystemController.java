@@ -1,6 +1,8 @@
 package javase.unit5.task5;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.Arrays;
 import java.util.List;
@@ -22,10 +24,14 @@ public class FileSystemController {
         currentDirectory = folder;
     }
 
+    public static FileSystemController fromCurrentDirectory() throws DirectoryNotFoundException, NotDirectoryException {
+        return new FileSystemController(".");
+    }
+
     public void move(String folderPath) throws NotDirectoryException, DirectoryNotFoundException {
         Objects.requireNonNull(folderPath);
 
-        File destination = getDestination(folderPath);
+        File destination = getFileFromRelativePath(folderPath);
 
         checkDirectoryOrDie(destination);
 
@@ -41,6 +47,18 @@ public class FileSystemController {
         return currentDirectory;
     }
 
+    public void create(String filePath) throws IOException {
+        FileSystemService.create(getFileFromRelativePath(filePath));
+    }
+
+    public void delete(String filePath) throws FileNotFoundException {
+        FileSystemService.delete(getFileFromRelativePath(filePath));
+    }
+
+    public void echo(String filePath, String content) throws IOException {
+        FileSystemService.echo(getFileFromRelativePath(filePath), content);
+    }
+
     private void checkDirectoryOrDie(File file) throws NotDirectoryException, DirectoryNotFoundException {
         if (file.exists()) {
             if (!file.isDirectory()) {
@@ -51,7 +69,7 @@ public class FileSystemController {
         }
     }
 
-    private File getDestination(String filePath) {
+    private File getFileFromRelativePath(String filePath) {
         return new File(
                 String.format(pathFormat,
                         currentDirectory.getAbsolutePath(),
