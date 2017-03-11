@@ -65,7 +65,7 @@ public class FileSystemController {
                 throw new NotDirectoryException(file.getName());
             }
         } else {
-            throw new DirectoryNotFoundException();
+            throw new DirectoryNotFoundException(file.getName());
         }
     }
 

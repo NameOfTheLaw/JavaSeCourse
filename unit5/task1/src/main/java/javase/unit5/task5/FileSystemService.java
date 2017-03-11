@@ -33,7 +33,7 @@ public class FileSystemService {
         Objects.requireNonNull(content);
 
         if (!file.exists()) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException(file.getName());
         } else {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(content);
