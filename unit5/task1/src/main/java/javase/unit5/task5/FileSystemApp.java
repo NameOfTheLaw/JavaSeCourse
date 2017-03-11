@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * UI shell for managing FileSystemController.
+ */
 public class FileSystemApp {
     private static FileSystemController controller;
     private static Pattern argumentPattern = Pattern.compile("\"([\\w .\\d]+)\"");

@@ -1,8 +1,16 @@
 package javase.unit5.task5;
 
+/**
+ * Exception for empty arguments in user commands.
+ */
 public class EmptyArgumentException extends RuntimeException {
     private final int index;
 
+    /**
+     * Constructor.
+     *
+     * @param i argument index.
+     */
     public EmptyArgumentException(int i) {
         this.index = i;
     }
