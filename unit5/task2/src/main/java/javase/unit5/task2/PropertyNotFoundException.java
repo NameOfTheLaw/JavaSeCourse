@@ -1,13 +1,22 @@
 package javase.unit5.task2;
 
+/**
+ * Exception for not found property in the properties file.
+ */
 public class PropertyNotFoundException extends Exception {
 
     private final String properties;
     private final String propertyKey;
 
-    public PropertyNotFoundException(String propertyKey, String properties) {
+    /**
+     * Constructor.
+     *
+     * @param propertyKey property.
+     * @param propertiesFileName properties file name.
+     */
+    public PropertyNotFoundException(String propertyKey, String propertiesFileName) {
         this.propertyKey = propertyKey;
-        this.properties = properties;
+        this.properties = propertiesFileName;
     }
 
     @Override

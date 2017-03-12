@@ -6,6 +6,9 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Reader for properties files.
+ */
 public class PropertiesReader {
 
     private static Pattern propertyKeyValuePattern = Pattern.compile("([^=]+)=([^=]+)");
@@ -15,6 +18,14 @@ public class PropertiesReader {
 
     private PropertiesReader() {}
 
+    /**
+     * Returns a PropertiesReader of the file.
+     *
+     * @param propertiesPath path to the properties file.
+     * @return PropertiesReader of the file.
+     * @throws PropertiesNotFoundException if properties file isn't exists.
+     * @throws NotReadablePropertiesException if properties file isn't readable;
+     */
     public static PropertiesReader of(String propertiesPath) throws PropertiesNotFoundException, NotReadablePropertiesException {
         Objects.requireNonNull(propertiesPath);
 
@@ -33,6 +44,13 @@ public class PropertiesReader {
         return propertiesReader;
     }
 
+    /**
+     * Returns a property value by the key.
+     *
+     * @param propertyKey key for property.
+     * @return a property value.
+     * @throws PropertyNotFoundException if where is no such a key in the property file.
+     */
     public String get(String propertyKey) throws PropertyNotFoundException {
         Objects.requireNonNull(propertyKey);
 
