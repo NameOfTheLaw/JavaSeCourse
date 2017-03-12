@@ -1,4 +1,4 @@
-package javase.unit5.task5;
+package javase.unit5.task1;
 
 /**
  * Exception for wrong arguments number in user commands.

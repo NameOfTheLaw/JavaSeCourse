@@ -1,4 +1,4 @@
-package javase.unit5.task5;
+package javase.unit5.task1;
 
 import org.junit.Before;
 import org.junit.Test;
