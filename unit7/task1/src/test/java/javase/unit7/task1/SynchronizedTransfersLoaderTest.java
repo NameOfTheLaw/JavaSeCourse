@@ -1,37 +1,28 @@
 package javase.unit7.task1;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.FileNotFoundException;
-import java.nio.file.NotDirectoryException;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 public class SynchronizedTransfersLoaderTest extends TransfersLoaderTest {
 
-    @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         super.setUp();
         loader = new SynchronizedTransfersLoader(testPath);
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testCreateLoaderFromNonExistingFile() {
+    public void testCreateLoaderFromNonExistingFile() throws IOException {
         loader = new SynchronizedTransfersLoader(Paths.get("testData\\nonExistingFile"));
     }
 
-    @Test(expected = NotDirectoryException.class)
-    public void testCreateLoaderFromNotAFile() {
+    public void testCreateLoaderFromNotAFile() throws IOException {
         loader = new SynchronizedTransfersLoader(Paths.get("testData"));
     }
 
-    @Test(expected = BadTransferFormatException.class)
-    public void testCreateLoaderIfFileHasBadFormattedTransfers() {
+    public void testCreateLoaderIfFileHasBadFormattedTransfers() throws IOException {
         loader = new SynchronizedTransfersLoader(Paths.get("testData\\testTransfersWithBadFormat.txt"));
     }
 
-    @Test(expected = IllegalTransferException.class)
-    public void testCreateLoaderIfFileHasIllegalTransfers() {
+    public void testCreateLoaderIfFileHasIllegalTransfers() throws IOException {
         loader = new SynchronizedTransfersLoader(Paths.get("testData\\testTransfersWithIllegalTransfers.txt"));
     }
 }

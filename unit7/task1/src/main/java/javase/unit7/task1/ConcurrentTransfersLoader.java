@@ -1,27 +1,22 @@
 package javase.unit7.task1;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConcurrentTransfersLoader implements TransfersLoader {
+public class ConcurrentTransfersLoader extends TransfersLoader {
 
     private List<Transfer> transfers = new ArrayList<>();
 
     public ConcurrentTransfersLoader(Path path) throws IOException {
-        Objects.requireNonNull(path);
-
-        validatePath(path);
+        super(path);
 
         List<Future<Transfer>> futureBuffer = getTransferFutures(path);
 
@@ -44,7 +39,10 @@ public class ConcurrentTransfersLoader implements TransfersLoader {
                 try {
                     transfers.add(transferFuture.get());
                 } catch (ExecutionException e) {
-                    throw (RuntimeException) e.getCause();
+                    Throwable cause = e.getCause();
+                    if (cause instanceof RuntimeException) {
+                        throw (RuntimeException) cause;
+                    }
                 } catch (InterruptedException e) {
                     //ignore
                 } finally {
@@ -69,18 +67,6 @@ public class ConcurrentTransfersLoader implements TransfersLoader {
         }
 
         return futureBuffer;
-    }
-
-    private void validatePath(Path path) throws FileNotFoundException, NotDirectoryException {
-        if (!path.toFile().exists()) {
-            throw new FileNotFoundException(
-                    String.format("File %s was not found.", path.getFileName()));
-        }
-
-        if (path.toFile().isDirectory()) {
-            throw new NotDirectoryException(
-                    String.format("%s is a directory.", path.getFileName()));
-        }
     }
 
     private static class TransferFormer implements Callable<Transfer> {
