@@ -9,11 +9,26 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parallel implementation of TransferLoader.
+ * <p>
+ * Uses synchronized block to forming transfers from file.
+ */
 public class SynchronizedTransfersLoader extends TransfersLoader {
 
     private List<Transfer> transfers = new ArrayList<>();
     private RuntimeException thrownByHandlersException;
 
+    /**
+     * Constructor.
+     *
+     * @param path path to the file with formatted transfers.
+     * @throws IOException if has no rights to write\read from path.
+     * @throws IllegalTransferException if found transfers in file handles
+     * illegal data.
+     * @throws BadTransferFormatException if transfers in file are represented
+     * in bad format.
+     */
     public SynchronizedTransfersLoader(Path path) throws IOException {
         super(path);
 

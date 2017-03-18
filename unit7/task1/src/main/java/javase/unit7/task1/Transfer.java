@@ -2,11 +2,21 @@ package javase.unit7.task1;
 
 import java.util.Objects;
 
+/**
+ * Transfer between two bank accounts {@link Account}.
+ */
 public class Transfer {
     private Account accountFrom;
     private Account accountTo;
     private int sum;
 
+    /**
+     * Constructor.
+     *
+     * @param accountFrom account which is losing the money.
+     * @param accountTo   account which is accepting the money.
+     * @param sum         transfer operation money value.
+     */
     public Transfer(Account accountFrom, Account accountTo, int sum) {
         Objects.requireNonNull(accountFrom);
         Objects.requireNonNull(accountTo);

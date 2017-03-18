@@ -11,10 +11,25 @@ import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parallel implementation of TransferLoader.
+ * <p>
+ * Uses java.util.concurrent to forming transfers from file.
+ */
 public class ConcurrentTransfersLoader extends TransfersLoader {
 
     private List<Transfer> transfers = new ArrayList<>();
 
+    /**
+     * Constructor.
+     *
+     * @param path path to the file with formatted transfers.
+     * @throws IOException if has no rights to write\read from path.
+     * @throws IllegalTransferException if found transfers in file handles
+     * illegal data.
+     * @throws BadTransferFormatException if transfers in file are represented
+     * in bad format.
+     */
     public ConcurrentTransfersLoader(Path path) throws IOException {
         super(path);
 
