@@ -18,17 +18,6 @@ public class Transfer {
         this.sum = sum;
     }
 
-    private void validateTransfer(Account accountFrom, Account accountTo, int sum) {
-        if (accountFrom.equals(accountTo)) {
-            throw new IllegalTransferException(
-                    String.format("Accounts %d must be different.", accountFrom.getId()));
-        }
-        if (sum <= 0) {
-            throw new IllegalTransferException(
-                    String.format("Sum %d should be bigger than 0.", sum));
-        }
-    }
-
     public Account getAccountFrom() {
         return accountFrom;
     }
@@ -39,6 +28,17 @@ public class Transfer {
 
     public int getSum() {
         return sum;
+    }
+
+    private void validateTransfer(Account accountFrom, Account accountTo, int sum) {
+        if (accountFrom.equals(accountTo)) {
+            throw new IllegalTransferException(
+                    String.format("Accounts %d must be different.", accountFrom.getId()));
+        }
+        if (sum <= 0) {
+            throw new IllegalTransferException(
+                    String.format("Sum %d should be bigger than 0.", sum));
+        }
     }
 
     @Override
