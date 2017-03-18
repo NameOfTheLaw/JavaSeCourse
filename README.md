@@ -25,12 +25,17 @@ Links for this repository.
 
 ## [Unit 03](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3)
  
-- [1](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task1/src/)
-- [2](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task2/src/)
-- [3](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task3/src/)
+- [1. CrazyLogger](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task1/src/)
+- [2. LocaleApp](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task2/src/)
+- [3. RegExpSearcher](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit3/task3/src/)
 
 ## [Unit 04](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4)
  
 - [1, 2. KeyWordsByteSeeker and KeyWordsSymbolSeeker](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4/task1/src/)
 - [3. UTF16Translator](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4/task3/src/)
 - [4. FilmCollection](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit4/task4/src/)
+
+## [Unit 05](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit5)
+ 
+- [1. FileSystemApp](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit5/task1/src/)
+- [2. PropertiesReader](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit5/task2/src/)
