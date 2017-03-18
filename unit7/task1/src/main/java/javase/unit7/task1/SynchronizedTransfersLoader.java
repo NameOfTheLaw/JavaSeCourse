@@ -12,28 +12,31 @@ import java.util.regex.Pattern;
 public class SynchronizedTransfersLoader extends TransfersLoader {
 
     private List<Transfer> transfers = new ArrayList<>();
-    private RuntimeException thrownException;
+    private RuntimeException thrownByHandlersException;
 
     public SynchronizedTransfersLoader(Path path) throws IOException {
         super(path);
 
-        List<Thread> threads = new ArrayList<>();
+        List<Thread> threads = startTransferFormersThreads(path);
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Thread handlingThread = new Thread(new TransferFormer(transfers, line));
-                handlingThread.setUncaughtExceptionHandler((thread, throwable) -> {
-                    if (throwable instanceof RuntimeException) {
-                        thrownException = (RuntimeException) throwable;
-                    }
-                });
-                handlingThread.start();
+        waitForAllThreadsToComplete(threads);
 
-                threads.add(handlingThread);
-            }
+        handleFormersExceptions();
+
+    }
+
+    @Override
+    public List<Transfer> get() {
+        return transfers;
+    }
+
+    private void handleFormersExceptions() {
+        if (thrownByHandlersException != null) {
+            throw thrownByHandlersException;
         }
+    }
 
+    private void waitForAllThreadsToComplete(List<Thread> threads) {
         for (Thread thread : threads) {
             try {
                 thread.join();
@@ -41,16 +44,28 @@ public class SynchronizedTransfersLoader extends TransfersLoader {
                 e.printStackTrace();
             }
         }
-
-        if (thrownException != null) {
-            throw thrownException;
-        }
-
     }
 
-    @Override
-    public List<Transfer> get() {
-        return transfers;
+    private List<Thread> startTransferFormersThreads(Path path) throws IOException {
+        List<Thread> threads = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Thread handlingThread = new Thread(new TransferFormer(transfers, line));
+
+                handlingThread.setUncaughtExceptionHandler((thread, throwable) -> {
+                    if (throwable instanceof RuntimeException) {
+                        thrownByHandlersException = (RuntimeException) throwable;
+                    }
+                });
+
+                handlingThread.start();
+
+                threads.add(handlingThread);
+            }
+        }
+        return threads;
     }
 
     private static class TransferFormer implements Runnable {
