@@ -1,5 +1,8 @@
 package javase.unit7.task3;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class UserResourceThread {
@@ -7,33 +10,50 @@ public class UserResourceThread {
     public static void main(String[] args) throws InterruptedException {
         SharedResource res = new SharedResource();
 
-        IntegerSetterGetter t1 = new IntegerSetterGetter("1", res);
-        IntegerSetterGetter t2 = new IntegerSetterGetter("2", res);
-        IntegerSetterGetter t3 = new IntegerSetterGetter("3", res);
-        IntegerSetterGetter t4 = new IntegerSetterGetter("4", res);
-        IntegerSetterGetter t5 = new IntegerSetterGetter("5", res);
+        ThreadPool threadPool = new ThreadPool(
+                new IntegerSetterGetter("1", res),
+                new IntegerSetterGetter("2", res),
+                new IntegerSetterGetter("3", res),
+                new IntegerSetterGetter("4", res),
+                new IntegerSetterGetter("5", res));
 
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-        t5.start();
+        threadPool.start();
 
         Thread.sleep(100);
 
-        t1.stopThread();
-        t2.stopThread();
-        t3.stopThread();
-        t4.stopThread();
-        t5.stopThread();
+        threadPool.stop();
 
-        t1.join();
-        t2.join();
-        t3.join();
-        t4.join();
-        t5.join();
+        threadPool.join();
 
         System.out.println("main");
+    }
+}
+
+class ThreadPool {
+
+    private List<IntegerSetterGetter> threads = new ArrayList<>();
+
+    public ThreadPool(IntegerSetterGetter... threads) {
+        Arrays.stream(threads)
+                .forEach(this::add);
+    }
+
+    public void add(IntegerSetterGetter thread) {
+        threads.add(thread);
+    }
+
+    public void start() {
+        threads.forEach(Thread::start);
+    }
+
+    public void stop() {
+        threads.forEach(IntegerSetterGetter::stopThread);
+    }
+
+    public void join() throws InterruptedException {
+        for (IntegerSetterGetter thread : threads) {
+            thread.join();
+        }
     }
 }
 
