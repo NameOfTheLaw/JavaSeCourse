@@ -42,6 +42,8 @@ class IntegerSetterGetter extends Thread {
     private SharedResource resource;
     private boolean run;
     private Random rand = new Random();
+    private static volatile Integer setterCount = 0;
+    private static volatile Integer setterGetterCount = 0;
 
     public IntegerSetterGetter(String name, SharedResource resource) {
         super(name);
@@ -54,20 +56,41 @@ class IntegerSetterGetter extends Thread {
         run = false;
     }
 
+    @Override
+    public synchronized void start() {
+        synchronized (setterGetterCount) {
+            setterGetterCount++;
+        }
+        super.start();
+    }
+
     public void run() {
         int action;
 
         try {
-            while (run) {
+            while (run && setterGetterCount > 1) {
                 action = rand.nextInt(1000);
-                if (action % 2 == 0) {
+                if (action % 2 == 0 && setterCount > 0) {
                     getIntegersFromResource();
                 } else {
+                    synchronized (setterCount) {
+                        setterCount++;
+                    }
+
                     setIntegersIntoResource();
+
+                    synchronized (setterCount) {
+                        setterCount--;
+                    }
                 }
             }
 
             System.out.println("Поток " + getName() + " завершил работу.");
+
+            synchronized (setterGetterCount) {
+                setterGetterCount--;
+            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
