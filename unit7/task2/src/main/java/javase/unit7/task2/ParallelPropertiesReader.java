@@ -1,7 +1,6 @@
 package javase.unit7.task2;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -54,7 +53,6 @@ public class ParallelPropertiesReader {
 
         ParallelPropertiesReader parallelPropertiesReader = new ParallelPropertiesReader();
         parallelPropertiesReader.propertiesPath = path;
-
         parallelPropertiesReader.properties = tryToLoadProperties(path);
 
         return parallelPropertiesReader;
@@ -107,16 +105,16 @@ public class ParallelPropertiesReader {
     private static void waitForLoading(Path path, Properties properties) {
         boolean isLoaded = false;
         while (!isLoaded) {
-            synchronized (container) {
-                isLoaded = container.isLoaded(path);
-            }
-
             try {
                 synchronized (properties) {
                     properties.wait(waitLimitForProperties);
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            }
+
+            synchronized (container) {
+                isLoaded = container.isLoaded(path);
             }
         }
     }
@@ -146,16 +144,6 @@ public class ParallelPropertiesReader {
         if (!path.toFile().exists()) {
             throw new PropertiesNotFoundException(path.getFileName().toString());
         }
-    }
-
-    private static File getPropertiesFile(String propertiesPath) throws PropertiesNotFoundException {
-        File propertiesFile = new File(propertiesPath);
-
-        if (!propertiesFile.exists()) {
-            throw new PropertiesNotFoundException(propertiesFile.getName());
-        }
-
-        return propertiesFile;
     }
 
     private static class PropertiesContainer {
