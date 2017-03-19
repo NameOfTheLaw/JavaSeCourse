@@ -17,6 +17,7 @@ public class ParallelPropertiesReader {
 
     private static Pattern propertyKeyValuePattern = Pattern.compile("([^=]+)=([^=]+)");
     private static PropertiesContainer container = new PropertiesContainer();
+    private static final int waitLimitForProperties = 100;
 
     private Properties properties;
     private Path propertiesPath;
@@ -54,37 +55,7 @@ public class ParallelPropertiesReader {
         ParallelPropertiesReader parallelPropertiesReader = new ParallelPropertiesReader();
         parallelPropertiesReader.propertiesPath = path;
 
-        Properties properties;
-        boolean isLoaded = false;
-        synchronized (container) {
-            if (container.isLoading(path)) {
-                properties = container.getLoadingProperties(path);
-                try {
-                    synchronized (properties) {
-                        properties.wait();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                isLoaded = true;
-            } else if (container.isLoaded(path)) {
-                properties = container.getProperties(path);
-                isLoaded = true;
-            } else {
-                properties = new Properties();
-                container.addLoading(path, properties);
-            }
-        }
-
-        if (!isLoaded) {
-            loadProperties(path, properties);
-            container.setLoaded(path, properties);
-            synchronized (properties) {
-                properties.notifyAll();
-            }
-        }
-
-        parallelPropertiesReader.properties = properties;
+        parallelPropertiesReader.properties = tryToLoadProperties(path);
 
         return parallelPropertiesReader;
     }
@@ -106,6 +77,50 @@ public class ParallelPropertiesReader {
         return properties.getProperty(propertyKey);
     }
 
+    private static Properties tryToLoadProperties(Path path) throws IOException {
+        Properties properties;
+        boolean isLoaded = false;
+        boolean isLoading = false;
+
+        synchronized (container) {
+            if (container.isLoading(path)) {
+                properties = container.getLoadingProperties(path);
+                isLoading = true;
+            } else if (container.isLoaded(path)) {
+                properties = container.getProperties(path);
+                isLoaded = true;
+            } else {
+                properties = new Properties();
+                container.addLoading(path, properties);
+            }
+        }
+
+        if (isLoading) {
+            waitForLoading(path, properties);
+        } else if (!isLoaded) {
+            loadProperties(path, properties);
+        }
+
+        return properties;
+    }
+
+    private static void waitForLoading(Path path, Properties properties) {
+        boolean isLoaded = false;
+        while (!isLoaded) {
+            synchronized (container) {
+                isLoaded = container.isLoaded(path);
+            }
+
+            try {
+                synchronized (properties) {
+                    properties.wait(waitLimitForProperties);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private static void loadProperties(Path path, Properties properties) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
             String line;
@@ -120,6 +135,10 @@ public class ParallelPropertiesReader {
                     }
                 }
             }
+        }
+
+        synchronized (container) {
+            container.setLoaded(path, properties);
         }
     }
 
@@ -147,7 +166,7 @@ public class ParallelPropertiesReader {
             return loadedProperties.containsKey(path);
         }
 
-        public synchronized boolean isLoading(Path path) {
+        public boolean isLoading(Path path) {
             return loadingProperties.containsKey(path);
         }
 
@@ -163,6 +182,10 @@ public class ParallelPropertiesReader {
             if (isLoading(path)) {
                 loadingProperties.remove(path);
                 loadedProperties.put(path, properties);
+
+                synchronized (properties) {
+                    properties.notifyAll();
+                }
             } else {
                 throw new ConcurrentModificationException(path.getFileName().toString());
             }
