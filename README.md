@@ -39,3 +39,9 @@ Links for this repository.
  
 - [1. FileSystemApp](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit5/task1/src/)
 - [2. PropertiesReader](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit5/task2/src/)
+
+## [Unit 07](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit7)
+ 
+- [1. ConcurrentTransfersLoader and SynchronizedTransfersLoader](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit7/task1/src/)
+- [2. ParallelPropertiesReader](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit7/task2/src/)
+- [3. improved UserResourceThread from task](https://github.com/NameOfTheLaw/JavaSeCourse/tree/master/unit7/task3/src/)
