@@ -3,6 +3,7 @@ package javase.unit7.task2;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -14,17 +15,17 @@ public class ParallelPropertiesReaderTest {
     private Path propertiesPath = Paths.get("testData\\testProperties_en_EN.properties");
 
     @Before
-    public void setUp() throws PropertiesNotFoundException, NotReadablePropertiesException {
+    public void setUp() throws PropertiesNotFoundException, IOException {
         reader = ParallelPropertiesReader.of(propertiesPath);
     }
 
     @Test
-    public void testCreate() throws PropertiesNotFoundException, NotReadablePropertiesException {
+    public void testCreate() throws PropertiesNotFoundException, IOException {
         reader = ParallelPropertiesReader.of(propertiesPath);
     }
 
     @Test(expected = PropertiesNotFoundException.class)
-    public void testCreateOfNonExistingProperties() throws PropertiesNotFoundException, NotReadablePropertiesException {
+    public void testCreateOfNonExistingProperties() throws PropertiesNotFoundException, IOException {
         reader = ParallelPropertiesReader.of(Paths.get("nonexistingfilename.properties"));
     }
 
