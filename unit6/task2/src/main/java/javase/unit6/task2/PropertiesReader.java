@@ -1,6 +1,8 @@
 package javase.unit6.task2;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -13,7 +15,7 @@ public class PropertiesReader {
 
     private static Pattern propertyKeyValuePattern = Pattern.compile("([^=]+)=([^=]+)");
 
-    private Properties properties;
+    private Map<String, String> properties;
     private String propertiesFileName;
 
     private PropertiesReader() {}
@@ -58,11 +60,11 @@ public class PropertiesReader {
             throw new PropertyNotFoundException(propertyKey, propertiesFileName);
         }
 
-        return properties.getProperty(propertyKey);
+        return properties.get(propertyKey);
     }
 
-    private static Properties readPropertiesFromFile(File propertiesFile) throws IOException {
-        Properties properties = new Properties();
+    private static Map<String, String> readPropertiesFromFile(File propertiesFile) throws IOException {
+        Map<String, String> properties = new HashMap<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(propertiesFile))) {
             String line;
